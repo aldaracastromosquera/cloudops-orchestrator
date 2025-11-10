@@ -10,8 +10,3 @@ Despliegue de una app Dockerizada en **AWS (EC2)** con **Terraform**, CI básico
 - Terraform (AWS EC2 + SG)
 - GitHub Actions (build + validate)
 
-
-## Uso rápido
-```bash
-make up # local
-# -> http://localhost
