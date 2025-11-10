@@ -1,2 +1,5 @@
+# Lista de dependencias necesarias para ejecutar la app Python.
+# Flask: microframework para crear aplicaciones web y APIs REST
+# Prometheus Client: biblioteca para recopilar y monitorear datos sobre el uso o rendimiento de la aplicación
 flask==3.0.3
 prometheus-client==0.20.0

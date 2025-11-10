@@ -1,14 +1,16 @@
-# Python
+# Archivos que GitHub debe ignorar (no rastrear ni subir al repositorio)
+
+# Archivos temporales de Python
 __pycache__/
 *.pyc
 
 
-# Env
+# Archivos de entorno (.env)
 .env
 *.env
 
 
-# Terraform
+# Archivos de Terraform : Estado y configuración local (datos de infrastructura o credenciales)
 **/.terraform/*
 *.tfstate
 *.tfstate.*
@@ -16,7 +18,7 @@ __pycache__/
 terraform.tfvars
 
 
-# Docker
+# Entornos virtuales y basura del sistema: Entornos virtuales de Python y archivos de sistema de macOS
 **/.venv
 **/venv
 **/.DS_Store
