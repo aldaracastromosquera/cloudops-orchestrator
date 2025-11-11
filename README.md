@@ -89,13 +89,13 @@ Este proyecto busca combinar aprendizaje y práctica real de DevOps, abarcando:
 
 ### Roadmap
 
-| 🧩 Fase | 📝 Descripción | 🚀 Estado |
+|  Fase |  Descripción |  Estado |
 |:--------:|:---------------|:-----------|
-| 1️⃣ | **Core Local** — Docker Compose + Flask + Nginx + Postgres | ✅ Completado |
-| 2️⃣ | **Infraestructura Cloud** — Terraform (Azure / AWS / GCP) | 🧱 En progreso |
-| 3️⃣ | **CI/CD** — Validación y despliegue automático | ✅ Completado |
-| 4️⃣ | **Monitoring** — Prometheus + Grafana | 🔄 Próximamente |
-| 5️⃣ | **Multi-Cloud** — Despliegue completo en todas las nubes | 🕓 Planificado |
+| 1️ | **Core Local** — Docker Compose + Flask + Nginx + Postgres | Completado |
+| 2️ | **Infraestructura Cloud** — Terraform (Azure / AWS / GCP) | En progreso |
+| 3️ | **CI/CD** — Validación y despliegue automático | Completado |
+| 4️ | **Monitoring** — Prometheus + Grafana | Próximamente |
+| 5️ | **Multi-Cloud** — Despliegue completo en todas las nubes | Próximamente |
 
 
 ---
@@ -113,13 +113,17 @@ Este proyecto busca combinar aprendizaje y práctica real de DevOps, abarcando:
 ---
 
 ### Autor
-Aldara Castro Mosquera
-Cloud & DevOps Enthusiast
+**Aldara Castro Mosquera**  
+*Cloud & DevOps Enthusiast*  
+Galicia, España  
 
 ---
 
 ### Licencia
-Proyecto bajo licencia MIT.
-Puedes usarlo libremente para fines educativos o profesionales, citando su origen.
+Este proyecto se distribuye bajo la licencia **MIT**, lo que significa que puedes:  
+- Usarlo libremente para fines **educativos o profesionales**.  
+- **Modificarlo, compartirlo y adaptarlo**, siempre citando su origen.  
 
->“CloudOps Orchestrator: por infraestructura convertido en arte automatizado.”
+📄 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
+
+---
