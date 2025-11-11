@@ -127,3 +127,132 @@ Este proyecto se distribuye bajo la licencia **MIT**, lo que significa que puede
 📄 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
 ---
+
+## 🇬🇧 English
+
+### Overview
+**CloudOps Orchestrator** is a modular tool that allows you to **automatically deploy Docker applications** across multiple environments (local, Azure, AWS, and GCP).  
+It integrates **Terraform** for Infrastructure as Code (IaC), **Docker Compose** for local setups, and **GitHub Actions** for CI/CD.  
+Includes **Prometheus and Grafana** for basic monitoring and metrics exposure, following DevOps best practices.
+
+---
+
+### Project structure
+```
+cloudops-orchestrator/
+├─ app/ # Flask application source code
+│ ├─ main.py # Endpoints + Prometheus metrics
+│ ├─ Dockerfile # App image
+│ └─ requirements.txt # Python dependencies
+│
+├─ nginx/ # Nginx reverse proxy configuration
+│ └─ default.conf
+│
+├─ terraform/ # Infrastructure as Code (IaC)
+│ ├─ azure/
+│ ├─ aws/
+│ └─ gcp/
+│
+├─ docs/ # Cloud provider documentation
+│ ├─ README-azure.md
+│ ├─ README-aws.md
+│ └─ README-gcp.md
+│
+├─ .github/workflows/ # CI/CD pipeline (automatic validation)
+│ └─ deploy.yml
+│
+├─ docker-compose.yml # Local stack: app + db + nginx
+├─ Makefile # Quick development commands
+└─ README.md # This document
+```
+
+
+---
+
+### Local execution
+
+#### Prerequisites
+- Docker + Docker Compose  
+- Python 3.10+ (only if running without containers)  
+- Terraform (for cloud deployment)
+
+#### Quick steps
+
+##### 1. Clone the repository
+```
+git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
+cd cloudops-orchestrator
+```
+
+##### 2. Start the services
+```
+make up
+```
+
+##### 3. View logs
+```
+make logs
+```
+
+The application will be available at http://localhost:8000
+
+Available endpoints:
+
+- / → Main message  
+- /health → Service status  
+- /metrics → Prometheus metrics
+
+---
+
+### Project philosophy
+> “Automate everything you can, but understand what you automate.”
+
+This project aims to combine **learning and real-world DevOps practice**, covering:
+
+- Reproducible infrastructure with Terraform  
+- Modular deployment per cloud provider  
+- Portable containers with Docker  
+- CI/CD automation with GitHub Actions  
+- Monitoring and metrics with Prometheus + Grafana
+
+---
+
+### Roadmap
+
+|  Phase |  Description |  Status |
+|:--------:|:---------------|:-----------|
+| 1️ | **Local Core** — Docker Compose + Flask + Nginx + Postgres | Completed |
+| 2️ | **Cloud Infrastructure** — Terraform (Azure / AWS / GCP) | In progress |
+| 3️ | **CI/CD** — Validation and automatic deployment | Completed |
+| 4️ | **Monitoring** — Prometheus + Grafana | Coming soon |
+| 5️ | **Multi-Cloud** — Full deployment across all clouds | Coming soon |
+
+---
+
+### Technologies used
+
+- Python 3.12  
+- Flask  
+- Prometheus Client  
+- Docker / Docker Compose  
+- Terraform  
+- Nginx  
+- GitHub Actions  
+
+---
+
+### Author
+**Aldara Castro Mosquera**  
+*Cloud & DevOps Enthusiast*  
+Galicia, Spain  
+
+---
+
+### License
+This project is distributed under the **MIT license**, which means you can:  
+- Use it freely for **educational or professional purposes**.  
+- **Modify, share, and adapt** it, always giving credit to the original source.  
+
+📄 See the [LICENSE](./LICENSE) file for more details.
+
+---
