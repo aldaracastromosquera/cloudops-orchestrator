@@ -10,15 +10,17 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
     networks: [app_net]
 
   app:
-    build: ./app            # si tu Dockerfile está en /app dentro del repo
+    build: ./app           # ← si tu Dockerfile está dentro de /app
     container_name: cloudops-app
     env_file: .env
     depends_on: [db]
     expose:
       - "8000"
+    restart: unless-stopped
     networks: [app_net]
 
   nginx:
@@ -29,6 +31,7 @@ services:
     depends_on: [app]
     ports:
       - "80:80"
+    restart: unless-stopped
     networks: [app_net]
 
 volumes:
