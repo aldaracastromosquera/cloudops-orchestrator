@@ -56,7 +56,8 @@ jobs:
       # Esto no sube nada, solo valida que el Dockerfile funciona correctamente.
       # --------------------------------------------------------
       - name: Build app image
-        run: docker build -t cloudops-app:ci ./app/Dockerfile
+        run: docker build -t cloudops-app:ci -f ./app/Dockerfile ./app
+
 
       # --------------------------------------------------------
       # Instalación de Terraform
