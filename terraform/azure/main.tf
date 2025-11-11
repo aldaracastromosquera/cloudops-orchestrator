@@ -81,7 +81,7 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-# ---- Interfaz de red ----
+# ---- Interfaz de red (NIC) ----
 resource "azurerm_network_interface" "nic" {
   name                = "${var.prefix}-nic"                   # Nombre (variables.tf)
   location            = var.location                          # Región (variables.tf)
@@ -128,4 +128,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   # Script cloud-init (Base64) que instala Docker y levanta la app
   custom_data = filebase64("${path.module}/user_data.sh")
+
+  tags = {
+    project = "cloudops-orchestrator"
+    env     = "demo"
+  }
 }
+
+
