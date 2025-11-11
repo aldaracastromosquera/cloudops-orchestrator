@@ -126,7 +126,7 @@ Este proyecto se distribuye bajo la licencia **MIT**, lo que significa que puede
 
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
-══════════════════════════════════════════════════════════════════════
+════════════════════════════════════════════════════════════
 
 
 ## 🇬🇧 English
