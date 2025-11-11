@@ -38,6 +38,8 @@ cloudops-orchestrator/
 └─ README.md # Este documento
 ```
 
+---
+
 ### Ejecución local
 
 #### Requisitos previos
@@ -48,133 +50,76 @@ cloudops-orchestrator/
 #### Pasos rápidos
 
 ##### 1. Clonar el repositorio
+```
 git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
 cd cloudops-orchestrator
+```
 
-# 2. Levantar los servicios
+##### 2. Levantar los servicios
+```
 make up
+```
 
-# 3. Ver logs
+##### 3. Ver logs
+```
 make logs
-La aplicación quedará accesible en
-👉 http://localhost:8000
+```
+La aplicación quedará accesible en http://localhost:8000
 
 Endpoints disponibles:
 
-/ → Mensaje principal
+- / → Mensaje principal
+- /health → Estado del servicio
+- /metrics → Métricas Prometheus
 
-/health → Estado del servicio
-
-/metrics → Métricas Prometheus
-
-🧠 Filosofía del proyecto
-“Automatiza todo lo que puedas, pero entiende lo que automatizas.”
+---
+ 
+### Filosofía del proyecto
+>“Automatiza todo lo que puedas, pero entiende lo que automatizas.”
 
 Este proyecto busca combinar aprendizaje y práctica real de DevOps, abarcando:
 
-🌍 Infraestructura reproducible con Terraform
+- Infraestructura reproducible con Terraform
+- Despliegue modular por proveedor cloud
+- Contenedores portables con Docker
+- Automatización CI/CD con GitHub Actions
+- Monitorización y métricas con Prometheus + Grafana
 
-🧩 Despliegue modular por proveedor cloud
+---
 
-🐳 Contenedores portables con Docker
+### Roadmap
 
-⚙️ Automatización CI/CD con GitHub Actions
+| 🧩 Fase | 📝 Descripción | 🚀 Estado |
+|:--------:|:---------------|:-----------|
+| 1️⃣ | **Core Local** — Docker Compose + Flask + Nginx + Postgres | ✅ Completado |
+| 2️⃣ | **Infraestructura Cloud** — Terraform (Azure / AWS / GCP) | 🧱 En progreso |
+| 3️⃣ | **CI/CD** — Validación y despliegue automático | ✅ Completado |
+| 4️⃣ | **Monitoring** — Prometheus + Grafana | 🔄 Próximamente |
+| 5️⃣ | **Multi-Cloud** — Despliegue completo en todas las nubes | 🕓 Planificado |
 
-📊 Monitorización y métricas con Prometheus + Grafana
 
-📊 Roadmap
-Fase	Descripción	Estado
-1️⃣ Core Local	Docker Compose + Flask + Nginx + Postgres	✅ Completado
-2️⃣ Infraestructura Cloud	Terraform (Azure / AWS / GCP)	🏗️ En progreso
-3️⃣ CI/CD	Validación y despliegue automático	✅
-4️⃣ Monitoring	Prometheus + Grafana	🔄 Próximamente
-5️⃣ Multi-Cloud	Despliegue completo en todas las nubes	🔜 Planificado
+---
 
-🧩 Tecnologías utilizadas
-Python 3.12
+### Tecnologías utilizadas
 
-Flask
+- Python 3.12
+- Flask
+- Prometheus Client
+- Docker / Docker Compose
+- Terraform
+- Nginx
+- GitHub Actions
 
-Prometheus Client
+---
 
-Docker / Docker Compose
-
-Terraform
-
-Nginx
-
-GitHub Actions
-
-👩‍💻 Autor
+### Autor
 Aldara Castro Mosquera
-Cloud & DevOps Enthusiast ☁️
-🔗 GitHub Profile
+Cloud & DevOps Enthusiast
 
-🧾 Licencia
+---
+
+### Licencia
 Proyecto bajo licencia MIT.
 Puedes usarlo libremente para fines educativos o profesionales, citando su origen.
 
-“CloudOps Orchestrator: donde la infraestructura se convierte en arte automatizado.” ✨
-
-🇬🇧 English
-💡 Overview
-CloudOps Orchestrator is a modular tool that allows you to automate Dockerized application deployments across multiple environments (local, Azure, AWS, and GCP).
-It integrates Terraform for Infrastructure as Code (IaC), Docker Compose for local testing, and GitHub Actions for CI/CD automation.
-Includes Prometheus and Grafana for monitoring and metrics exposure, following modern DevOps best practices.
-
-🧱 Project structure
-(Same as above, translated)
-
-🚀 Run locally
-🧩 Requirements
-Docker + Docker Compose
-
-Python 3.10+ (optional for manual run)
-
-Terraform (for cloud deployment)
-
-▶️ Quick start
-bash
-Copy code
-git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
-cd cloudops-orchestrator
-make up
-make logs
-App available at http://localhost:8000
-
-Endpoints:
-
-/ → Main route
-
-/health → Service health
-
-/metrics → Prometheus metrics
-
-🧠 Project philosophy
-“Automate everything you can, but understand what you automate.”
-
-Combines learning and real-world DevOps practice, including:
-
-🌍 Reproducible infrastructure with Terraform
-
-🧩 Modular cloud deployments
-
-🐳 Portable containers with Docker
-
-⚙️ CI/CD automation via GitHub Actions
-
-📊 Observability with Prometheus + Grafana
-
-📊 Roadmap
-(same as Spanish, translated)
-
-👩‍💻 Author
-Aldara Castro Mosquera
-Cloud & DevOps Enthusiast ☁️
-🔗 GitHub Profile
-
-🧾 License
-Licensed under MIT — free to use for educational or professional purposes, with attribution.
-
-“CloudOps Orchestrator: where infrastructure becomes automated art.” ✨
-
+>“CloudOps Orchestrator: por infraestructura convertido en arte automatizado.”
