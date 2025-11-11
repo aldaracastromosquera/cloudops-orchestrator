@@ -1,8 +1,5 @@
 # CLOUDOPS ORCHESTRATOR
 
-> **Automatización DevOps Multicloud — Terraform + Docker + CI/CD**
-
-
 ## 🇪🇸 Español
 
 ### Descripción general
@@ -13,7 +10,7 @@ Incluye **Prometheus y Grafana** para monitorización básica y exposición de m
 ---
 
 ### Estructura del proyecto
-
+```
 cloudops-orchestrator/
 ├─ app/ # Código fuente de la aplicación Flask
 │ ├─ main.py # Endpoints + métricas Prometheus
@@ -39,7 +36,7 @@ cloudops-orchestrator/
 ├─ docker-compose.yml # Stack local: app + db + nginx
 ├─ Makefile # Comandos rápidos para desarrollo
 └─ README.md # Este documento
-
+```
 
 ### Ejecución local
 
