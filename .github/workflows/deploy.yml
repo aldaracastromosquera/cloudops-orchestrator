@@ -50,29 +50,14 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       # --------------------------------------------------------
-      # Debug mínimo: muestra árbol de archivos para confirmar rutas
+      # Construcción de la imagen Docker de la aplicación.
+      # - Se etiqueta como "cloudops-app:ci"
+      # - Usa el Dockerfile ubicado en la carpeta ./app
+      # Esto no sube nada, solo valida que el Dockerfile funciona correctamente.
       # --------------------------------------------------------
-      - name: List repo tree
-        run: |
-          pwd
-          ls -la
-          [ -d app ] && (echo "--- app/ ---"; ls -la app) || true
+      - name: Build app image
+        run: docker build -t cloudops-app:ci -f ./Dockerfile .
 
-      # --------------------------------------------------------
-      # Build si el Dockerfile está en la raíz del repo
-      # --------------------------------------------------------
-      - name: Build app image (root Dockerfile)
-        if: ${{ hashFiles('Dockerfile') != '' }}
-        run: |
-          docker build -t cloudops-app:ci -f ./Dockerfile .
-
-      # --------------------------------------------------------
-      # Build si el Dockerfile está dentro de app/
-      # --------------------------------------------------------
-      - name: Build app image (app/Dockerfile)
-        if: ${{ hashFiles('app/Dockerfile') != '' }}
-        run: |
-          docker build -t cloudops-app:ci -f ./app/Dockerfile ./app
 
 
       # --------------------------------------------------------
