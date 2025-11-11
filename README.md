@@ -1,19 +1,18 @@
-# 🌩️ CloudOps Orchestrator
+# CLOUDOPS ORCHESTRATOR
 
 > **Automatización DevOps Multicloud — Terraform + Docker + CI/CD**
 
----
 
 ## 🇪🇸 Español
 
-### 💡 Descripción general
-**CloudOps Orchestrator** es una herramienta modular que permite **desplegar aplicaciones Dockerizadas** de forma automática en distintos entornos (local, Azure, AWS y GCP).  
+### Descripción general
+**CloudOps Orchestrator** es una herramienta modular que permite **desplegar aplicaciones Docker** de forma automática en distintos entornos (local, Azure, AWS y GCP).  
 Integra **Terraform** para la infraestructura como código (IaC), **Docker Compose** para entornos locales y **GitHub Actions** para CI/CD.  
 Incluye **Prometheus y Grafana** para monitorización básica y exposición de métricas, siguiendo las mejores prácticas DevOps.
 
 ---
 
-### 🧱 Estructura del proyecto
+### Estructura del proyecto
 
 cloudops-orchestrator/
 ├─ app/ # Código fuente de la aplicación Flask
@@ -42,16 +41,16 @@ cloudops-orchestrator/
 └─ README.md # Este documento
 
 
-### 🚀 Ejecución local
+### Ejecución local
 
-#### 🧩 Requisitos previos
+#### Requisitos previos
 - Docker + Docker Compose  
 - Python 3.10+ (solo si se quiere ejecutar sin contenedor)  
 - Terraform (para despliegue en nube)
 
-#### ▶️ Pasos rápidos
+#### Pasos rápidos
 
-# 1. Clonar el repositorio
+##### 1. Clonar el repositorio
 git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
 cd cloudops-orchestrator
 
