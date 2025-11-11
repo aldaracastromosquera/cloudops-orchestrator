@@ -40,6 +40,9 @@ az login
 ```
 terraform -version
 ```
+
+---
+
 ### Despliegue paso a paso
 #### 1. Inicializar Terraform
 ```
@@ -78,12 +81,16 @@ Deberías ver el mensaje:
 
 >Hola desde CloudOps Orchestrator!
 
+---
+
 ### Limpieza del entorno
 Cuando termines las pruebas, destruye todos los recursos:
 ```
 terraform destroy -auto-approve
 ```
 Así evitarás costos innecesarios en tu cuenta de Azure.
+
+---
 
 ### Conceptos clave
 | Recurso | Descripción |
@@ -95,12 +102,15 @@ Así evitarás costos innecesarios en tu cuenta de Azure.
 | `azurerm_public_ip` | IP pública para acceder a la aplicación |
 | `azurerm_linux_virtual_machine` | Instancia principal que ejecuta Docker |
 
+---
 
 ### Filosofía del despliegue
 >“Infraestructura reproducible, sin clics y sin miedo.”
 
 Este módulo Azure demuestra cómo pasar de una app local a un entorno cloud completamente automatizado.
 Cada despliegue es idéntico, seguro y versionable, gracias a Terraform.
+
+---
 
 ### Outputs típicos
 Tras un despliegue exitoso, verás:
@@ -117,6 +127,8 @@ Y podrás acceder directamente desde tu navegador o hacer ping con:
 curl http://$(terraform output -raw public_ip)
 ```
 
+---
+
 ### Detalle del user_data.sh
 Este script se ejecuta automáticamente al iniciar la VM y prepara todo el entorno:
 ```
@@ -128,6 +140,8 @@ cd /opt/cloudops
 docker compose up -d
 ```
 **Resultado**: el sistema se autoconfigura y lanza la app Flask con Nginx y Postgres en segundos.
+
+---
 
 ### Integración con GitHub Actions (opcional)
 Puedes ampliar el flujo CI/CD para que GitHub valide la infraestructura:
@@ -171,6 +185,8 @@ Includes:
 - Deployment of an Ubuntu VM with Docker preinstalled
 - Automatic execution of docker compose up -d
 
+---
+
 ### Prerequisites
 #### 1. Active **Azure account**
 #### 2. **Azure CLI** installed and logged in:
@@ -181,6 +197,9 @@ az login
 ```
 terraform -version
 ```
+
+---
+
 ### Deployment steps
 ```
 cd terraform/azure
@@ -190,11 +209,15 @@ terraform apply -auto-approve
 After a few minutes, Terraform will show the **public IP of the VM**.
 **Open it in your browser** to verify that the application is running.
 
+---
+
 ### Cleanup
 Destroy the resources when done:
 ```
 terraform destroy -auto-approve
 ```
+
+---
 
 ### Philosophy
 >“Reproducible infrastructure, without clicks and without fear.”
@@ -202,6 +225,7 @@ terraform destroy -auto-approve
 This Azure module shows how to go from a local app to a fully automated cloud environment.
 Every deployment is consistent, safe, and version-controlled, thanks to Terraform.
 
+---
 
 ### Author
 **Aldara Castro Mosquera**  
