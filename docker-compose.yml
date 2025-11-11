@@ -11,19 +11,19 @@ services:
   # Base de datos (PostgreSQL)
   # ----------------------------------------------------------
   db:
-    image: postgres:16                        # Usa la imagen oficial de Postgres versión 16
-    container_name: cloudops-db               # Nombre identificador del contenedor
+    image: postgres:16                        # Usa la imagen de Postgres versión 16
+    container_name: cloudops-db               # Nombre del contenedor
     environment:                              # Variables de entorno para configurar la DB
-      POSTGRES_USER: ${DB_USER:-cloudops}     # Usuario de la base de datos (por defecto 'cloudops')
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-cloudops} # Contraseña del usuario
-      POSTGRES_DB: ${DB_NAME:-cloudops}       # Nombre de la base de datos inicial
+      POSTGRES_USER: ${DB_USER:-cloudops}                         # Usuario de la base de datos
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-cloudops}                 # Contraseña del usuario
+      POSTGRES_DB: ${DB_NAME:-cloudops}                           # Nombre de la base de datos
     volumes:
-      - db_data:/var/lib/postgresql/data      # Volumen para persistir los datos (no se pierden al reiniciar)
+      - db_data:/var/lib/postgresql/data                          # Volumen para persistir los datos
     healthcheck:                              # Comprueba si el servicio está listo
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]  # Usa el comando pg_isready
-      interval: 10s                           # Repite la comprobación cada 10 segundos
-      timeout: 5s                             # Espera máximo 5 segundos por respuesta
-      retries: 5                              # Reintenta 5 veces antes de marcar como "no saludable"
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]      # Usa el comando pg_isready para definir la condición de salud del contenedor
+      interval: 10s                                               # Repite la comprobación cada 10 segundos
+      timeout: 5s                                                 # Espera máximo 5 segundos por respuesta
+      retries: 5                                                  # Reintenta 5 veces antes de marcar como "no saludable"
     networks: [app_net]                       # Conecta el contenedor a la red interna "app_net"
 
   # ----------------------------------------------------------
@@ -31,30 +31,30 @@ services:
   # ----------------------------------------------------------
   app:
     build:                                    # Construye la imagen a partir del Dockerfile
-      context: .                              # Carpeta raíz del proyecto
-      dockerfile: app/Dockerfile              # Ruta del Dockerfile dentro del proyecto
+      context: .                                                  # Carpeta raíz del proyecto
+      dockerfile: app/Dockerfile                                  # Ruta del Dockerfile dentro del proyecto
     container_name: cloudops-app              # Nombre del contenedor
     env_file:
-      - app/.env.example                      # Carga variables de entorno desde el archivo .env.example
+      - app/.env.example                                          # Carga variables de entorno desde el archivo .env.example
     depends_on:                               # Espera a que la base de datos esté lista antes de arrancar
       db:
         condition: service_healthy
     ports:
-      - "8000:8000"                           # Expone el puerto 8000 para acceder a la app desde el host
+      - "8000:8000"                                               # Expone el puerto 8000 para acceder a la app desde el host
     networks: [app_net]                       # Conecta con la misma red que la base de datos y Nginx
 
   # ----------------------------------------------------------
   # Nginx (proxy inverso)
   # ----------------------------------------------------------
   nginx:
-    image: nginx:1.27-alpine                  # Imagen oficial ligera de Nginx (basada en Alpine Linux)
+    image: nginx:1.27-alpine                  # Imagen  ligera de Nginx
     container_name: cloudops-nginx            # Nombre del contenedor
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro  # Monta la configuración personalizada
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro    # Monta la configuración personalizada
     depends_on:
       - app                                  # Espera a que la app esté disponible
     ports:
-      - "80:80"                              # Expone el puerto 80 (HTTP estándar)
+      - "80:80"                                                   # Expone el puerto 80
     networks: [app_net]                      # Usa la misma red para comunicarse con la app
 
 # ------------------------------------------------------------
