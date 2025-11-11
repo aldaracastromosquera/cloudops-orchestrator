@@ -22,7 +22,6 @@ jobs:
   build_and_validate:
     # --------------------------------------------------------
     # El runner es el sistema donde GitHub ejecuta los comandos
-<<<<<<< HEAD
     # --------------------------------------------------------
     runs-on: ubuntu-latest  # "ubuntu-latest" significa que usará una máquina Linux actualizada
 
