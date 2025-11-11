@@ -1,64 +1,50 @@
-############################
-# Variables principales
-############################
+#  Variables configurables para personalizar la infraestructura desplegada en Azure.
+
+# ------------------------------------------------------------
+# Nombre del grupo de recursos que contendrá todos los elementos del proyecto en Azure (redes, VM, IPs, etc.)
+# ------------------------------------------------------------
 variable "resource_group_name" {
-  description = "Nombre del Resource Group"
-  type        = string
+  description = "Nombre del grupo de recursos de Azure"
   default     = "cloudops-rg"
 }
 
+# ------------------------------------------------------------
+# Región o ubicación donde se desplegarán los recursos.
+# ------------------------------------------------------------
 variable "location" {
-  description = "Región de Azure"
-  type        = string
+  description = "Región donde se desplegarán los recursos"
   default     = "westeurope"
 }
 
-variable "vnet_name" {
-  description = "Nombre de la VNet"
-  type        = string
-  default     = "cloudops-vnet"
-}
-
-variable "vnet_cidr" {
-  description = "CIDR de la VNet"
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
-variable "subnet_name" {
-  description = "Nombre del Subnet"
-  type        = string
-  default     = "default"
-}
-
-variable "subnet_cidr" {
-  description = "CIDR del Subnet"
-  type        = string
-  default     = "10.0.1.0/24"
-}
-
-variable "vm_name" {
-  description = "Nombre de la VM"
-  type        = string
-  default     = "cloudops-vm"
-}
-
-variable "vm_size" {
-  description = "Tamaño de la VM"
-  type        = string
-  default     = "Standard_B1s"
-}
-
-variable "admin_username" {
-  description = "Usuario administrador de la VM"
-  type        = string
+# ------------------------------------------------------------
+# Prefijo utilizado como base para nombrar los recursos.
+# ------------------------------------------------------------
+variable "prefix" {
+  description = "Prefijo base para los nombres de recursos"
   default     = "cloudops"
 }
 
-variable "admin_password" {
-  description = "Contraseña del admin (solo demo; para prod usa SSH keys)"
-  type        = string
-  sensitive   = true
-  default     = "CloudOps123!."
+# ------------------------------------------------------------
+# Nombre del administrador con el que podrás iniciar sesión en la máquina virtual (por SSH o Azure Portal).
+# ------------------------------------------------------------
+variable "admin_username" {
+  description = "Usuario administrador para acceder a la VM"
+  default     = "azureuser"
 }
 
+# ------------------------------------------------------------
+# Contraseña del usuario administrador. Debe cumplir con los requisitos de Azure (mínimo 12 caracteres, mayúsculas, minúsculas, número y símbolo).
+# (!!!) NO dejar contraseñas en texto plano, Se pueden pasar como variables de entorno o desde Azure Key Vault.
+# ------------------------------------------------------------
+variable "admin_password" {
+  description = "Contraseña del usuario administrador (mínimo 12 caracteres)"
+  default     = "CloudOps1234!"
+}
+
+# ------------------------------------------------------------
+# Tipo y tamaño de la máquina virtual a desplegar.
+# ------------------------------------------------------------
+variable "vm_size" {
+  description = "Tamaño de la máquina virtual"
+  default     = "Standard_B1s"
+}

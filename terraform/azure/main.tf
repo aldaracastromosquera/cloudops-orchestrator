@@ -1,205 +1,138 @@
-############################################################
-#  Terraform: Azure RG + Networking + VM + NSG + cloud-init
-############################################################
+#  Define los recursos que Terraform desplegará en Microsoft Azure: grupo de recursos, red, VM y seguridad.
+
 
 terraform {
-  required_version = ">= 1.5.0"
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.116.0"
+      source  = "hashicorp/azurerm"     # Proveedor de Azure para Terraform
+      version = "~>3.116.0"             # Versión 
     }
   }
+
+  required_version = ">= 1.5.0"         # Versión de Terraform
 }
 
+# ---- Proveedor de Azure ----
 provider "azurerm" {
-  features {}
+  features {}                            # Habilita features por defecto
 }
 
-########################
-#  Resource Group
-########################
+# ---- Grupo de recursos ----
 resource "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name   # ej: cloudops-rg
-  location = var.location              # ej: westeurope
-  tags = {
-    project = "cloudops-orchestrator"
-    env     = "demo"
-  }
+  name     = var.resource_group_name     # Nombre (variables.tf)
+  location = var.location                # Región (variables.tf)
 }
 
-########################
-#  Networking
-########################
+# ---- Red virtual ----
 resource "azurerm_virtual_network" "vnet" {
-  name                = var.vnet_name          # ej: cloudops-vnet
-  address_space       = [var.vnet_cidr]        # ej: 10.0.0.0/16
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  tags = {
-    project = "cloudops-orchestrator"
-    env     = "demo"
-  }
+  name                = "${var.prefix}-vnet"                  # Nombre (variables.tf)
+  address_space       = ["10.0.0.0/16"]                       # Rango IP para toda la VNet
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado
 }
 
+# ---- Subred ----
 resource "azurerm_subnet" "subnet" {
-  name                 = var.subnet_name       # ej: default
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = [var.subnet_cidr]     # ej: 10.0.1.0/24
+  name                 = "${var.prefix}-subnet"               # Nombre (variables.tf)
+  resource_group_name  = azurerm_resource_group.rg.name       # Grupo de recursos creado
+  virtual_network_name = azurerm_virtual_network.vnet.name    # VNet creada
+  address_prefixes     = ["10.0.1.0/24"]                      # Rango IP específico de la subred
 }
 
-# IP pública (SKU Standard recomendado)
+# ---- IP pública ----
 resource "azurerm_public_ip" "pip" {
-  name                = "${var.vm_name}-pip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  tags = {
-    project = "cloudops-orchestrator"
-    env     = "demo"
+  name                = "${var.prefix}-pip"                   # Nombre (variables.tf)
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado  
+  allocation_method   = "Static"                              # Standard requiere estática 
+  sku                 = "Standard"                            # Cambiar de Basic a Standard (requisito Azure, dio error)              
+}
+
+# ---- Grupo de seguridad  ----
+resource "azurerm_network_security_group" "nsg" {
+  name                = "${var.prefix}-nsg"                   # Nombre (variables.tf)
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado
+
+  # Permitir tráfico HTTP (puerto 80) desde Internet
+  security_rule {
+    name                       = "HTTP"                       # Nombre de la regla
+    priority                   = 1001                         # Menor número = mayor prioridad
+    direction                  = "Inbound"                    # Tráfico entrante hacia la VM
+    access                     = "Allow"                      # Permitir
+    protocol                   = "Tcp"                        # Protocolo TCP 
+    source_port_range          = "*"                          # Cualquier puerto de origen
+    destination_port_range     = "80"                         # Puerto destino 80 (Nginx)
+    source_address_prefix      = "*"                          # Desde cualquier IP
+    destination_address_prefix = "*"                          # Hacia la VM
+  }
+
+  # Permitir acceso SSH (puerto 22) para administración
+  security_rule {
+    name                       = "SSH"                        # Nombre de la regla
+    priority                   = 1002                         # Menor número = mayor prioridad
+    direction                  = "Inbound"                    # Tráfico entrante hacia la VM
+    access                     = "Allow"                      # Permitir
+    protocol                   = "Tcp"                        # Protocolo TCP
+    source_port_range          = "*"                          # Cualquier puerto de origen
+    destination_port_range     = "22"                         # Puerto destino 22 (SSH)
+    source_address_prefix      = "*"                          # (Debería restringir a IP pública)
+    destination_address_prefix = "*"                          # Hacia la VM
   }
 }
 
-# Interfaz de red
+# ---- Interfaz de red (NIC) ----
 resource "azurerm_network_interface" "nic" {
-  name                = "${var.vm_name}-nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "${var.prefix}-nic"                   # Nombre (variables.tf)
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado
 
   ip_configuration {
-    name                          = "ipconfig1"
-    subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
-  }
-
-  tags = {
-    project = "cloudops-orchestrator"
-    env     = "demo"
+    name                          = "internal"                    # Nombre de la configuración IP
+    subnet_id                     = azurerm_subnet.subnet.id      # Subred creada
+    private_ip_address_allocation = "Dynamic"                     # IP privada dinámica
+    public_ip_address_id          = azurerm_public_ip.pip.id      # Asocia la IP pública creada
   }
 }
 
-########################
-#  NSG + reglas + asociación
-########################
-resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.vm_name}-nsg"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  tags = {
-    project = "cloudops-orchestrator"
-    env     = "demo"
-  }
-}
-
-# SSH
-resource "azurerm_network_security_rule" "ssh" {
-  name                        = "SSH"
-  priority                    = 1002
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "22"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-# HTTP
-resource "azurerm_network_security_rule" "http" {
-  name                        = "HTTP"
-  priority                    = 1001
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "80"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-# HTTPS (opcional)
-resource "azurerm_network_security_rule" "https" {
-  name                        = "HTTPS"
-  priority                    = 1000
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "443"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-# Puerto directo de la app (opcional)
-resource "azurerm_network_security_rule" "app8000" {
-  name                        = "APP8000"
-  priority                    = 1003
-  direction                   = "Inbound"
-  access                      = "Allow"
-  protocol                    = "Tcp"
-  source_port_range           = "*"
-  destination_port_range      = "8000"
-  source_address_prefix       = "*"
-  destination_address_prefix  = "*"
-  resource_group_name         = azurerm_resource_group.rg.name
-  network_security_group_name = azurerm_network_security_group.nsg.name
-}
-
-# Asociación NSG ↔ NIC  (usa esta o la de Subnet, pero no ambas)
-resource "azurerm_network_interface_security_group_association" "nic_assoc" {
+# ---- Asociación entre la interfaz de red (NIC) y el grupo de seguridad (NSG) ----
+# Así, las reglas de seguridad definidas se aplican realmente al tráfico de esa VM.
+resource "azurerm_network_interface_security_group_association" "nic_nsg" {
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
-########################
-#  Virtual Machine
-########################
+# ---- Máquina virtual Linux ----
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = var.vm_name            # ej: cloudops-vm
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  size                = var.vm_size            # ej: Standard_B1s
-  admin_username      = var.admin_username     # ej: cloudops
+  name                  = "${var.prefix}-vm"                  # Nombre (variables.tf)
+  resource_group_name   = azurerm_resource_group.rg.name      # Grupo de recursos creado
+  location              = var.location                        # Región (variables.tf) 
+  size                  = var.vm_size                         # Tamaño de la VM (variables.tf)
+  admin_username        = var.admin_username                  # Administrador (variables.tf)
+  admin_password        = var.admin_password                  # Contraseña (variables.tf)
+  disable_password_authentication = false                     # Permite login por password (true para solo SSH)
+  network_interface_ids = [azurerm_network_interface.nic.id]  # NIC asociada a la VM
 
-  # Para acceder con contraseña (en demos). En prod, usar SSH keys.
-  disable_password_authentication = false
-  admin_password                  = var.admin_password
+  os_disk {
+    caching              = "ReadWrite"                        # Caché de disco
+    storage_account_type = "Standard_LRS"                     # Disco estándar (barato)
+  }
 
-  network_interface_ids = [azurerm_network_interface.nic.id]
-
-  # Ubuntu 22.04 LTS (Jammy). Puedes cambiar a 20_04-lts si prefieres.
+  # Imagen base: Ubuntu 20.04 LTS (Focal)
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts"
     version   = "latest"
   }
 
-  # cloud-init: ejecuta tu script para instalar Docker y levantar la app
+  # Script cloud-init (Base64) que instala Docker y levanta la app
   custom_data = filebase64("${path.module}/user_data.sh")
-
-  os_disk {
-    name                 = "${var.vm_name}-osdisk"
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  boot_diagnostics {
-    storage_account_uri = null
-  }
 
   tags = {
     project = "cloudops-orchestrator"
     env     = "demo"
   }
 }
+
+

@@ -3,4 +3,3 @@
 # Prometheus Client: biblioteca para recopilar y monitorear datos sobre el uso o rendimiento de la aplicación
 flask==3.0.3
 prometheus-client==0.20.0
-gunicorn==22.0.0
