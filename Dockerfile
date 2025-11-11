@@ -9,11 +9,10 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends ca-certifica
 && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
 COPY . /app/
 
 EXPOSE 8000
-CMD ["python", "main.py"]
+CMD ["./app/gunicorn.sh"]
