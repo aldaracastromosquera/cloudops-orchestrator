@@ -65,7 +65,7 @@ terraform plan
 ```
 terraform apply -auto-approve
 ```
-**Espera unos minutos** mientras Azure crea la red, VM y ejecuta el script de instalación.
+Espera unos minutos mientras Azure crea la red, VM y ejecuta el script de instalación.
 
 #### 5. Ver resultados
 Al finalizar, Terraform mostrará:
@@ -75,7 +75,7 @@ Outputs:
 public_ip = "52.174.xxx.xxx"
 ```
 
-**Abre esa IP en tu navegador** → http://52.174.xxx.xxx
+Abre esa IP en tu navegador → http://52.174.xxx.xxx
 
 Deberías ver el mensaje:
 
@@ -139,7 +139,7 @@ git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git /opt
 cd /opt/cloudops
 docker compose up -d
 ```
-**Resultado**: el sistema se autoconfigura y lanza la app Flask con Nginx y Postgres en segundos.
+Resultado: el sistema se autoconfigura y lanza la app Flask con Nginx y Postgres en segundos.
 
 ---
 
@@ -206,8 +206,8 @@ cd terraform/azure
 terraform init
 terraform apply -auto-approve
 ```
-After a few minutes, Terraform will show the **public IP of the VM**.
-**Open it in your browser** to verify that the application is running.
+After a few minutes, Terraform will show the public IP of the VM.
+Open it in your browser to verify that the application is running.
 
 ---
 
