@@ -10,7 +10,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Copia requirements.txt desde la RAÍZ del repo
-COPY requirements.txt ./requirements.txt
+COPY requirements.txt ./app/requirements.txt
 
 # Instala dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
