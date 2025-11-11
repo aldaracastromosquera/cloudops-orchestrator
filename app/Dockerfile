@@ -42,7 +42,7 @@ RUN pip install -r requirements.txt
 # Copia el código fuente de la aplicación
 # ------------------------------------------------------------
 # Copia todo el contenido de la carpeta app/ desde el host hacia el directorio /app dentro del contenedor
-COPY . .
+COPY app/ .
 
 # ------------------------------------------------------------
 # Expone el puerto por donde escuchará la aplicación Flask
