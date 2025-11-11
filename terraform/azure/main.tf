@@ -44,7 +44,8 @@ resource "azurerm_public_ip" "pip" {
   name                = "${var.prefix}-pip"                   # Nombre (variables.tf)
   location            = var.location                          # Región (variables.tf)
   resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado  
-  allocation_method   = "Dynamic"                             # IP dinámica (cambia al reiniciar recursos)
+  allocation_method   = "Static"                              # Standard requiere estática 
+  sku                 = "Standard"                            # Cambiar de Basic a Standard (requisito Azure, dio error)              
 }
 
 # ---- Grupo de seguridad  ----
@@ -92,6 +93,13 @@ resource "azurerm_network_interface" "nic" {
     private_ip_address_allocation = "Dynamic"                     # IP privada dinámica
     public_ip_address_id          = azurerm_public_ip.pip.id      # Asocia la IP pública creada
   }
+}
+
+# ---- Asociación entre la interfaz de red (NIC) y el grupo de seguridad (NSG) ----
+# Así, las reglas de seguridad definidas se aplican realmente al tráfico de esa VM.
+resource "azurerm_network_interface_security_group_association" "nic_nsg" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 # ---- Máquina virtual Linux ----

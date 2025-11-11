@@ -34,17 +34,41 @@ terraform/
 #### 1. **Cuenta de Azure** activa  
 #### 2. **Azure CLI** instalada y autenticada:
 ```
-az login
+winget install -e --id Microsoft.AzureCLI
+az version
 ```
 #### 3. **Terraform instalado** (v1.5+ recomendado):
 ```
+winget install -e --id HashiCorp.Terraform
 terraform -version
+```
+#### 4. **Git instalado** (para clonar repositorio):
+```
+winget install -e --id Git.Git
+git --version
 ```
 
 ---
 
 ### Despliegue paso a paso
-#### 1. Inicializar Terraform
+#### 1. Clonar el repositorio
+```
+cd $HOME\Desktop
+git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
+cd .\cloudops-orchestrator\terraform\azure
+```
+#### 2. Iniciar sesión en Azure:
+```
+cd $HOME\Desktop
+git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
+cd .\cloudops-orchestrator\terraform\azure
+```
+Selecciona tu suscripción si tienes varias:
+```
+az account list --output table
+az account set --subscription "<NOMBRE O ID>"
+```
+#### 3. Inicializar Terraform
 ```
 cd terraform/azure
 terraform init
@@ -191,22 +215,36 @@ Includes:
 #### 1. Active **Azure account**
 #### 2. **Azure CLI** installed and logged in:
 ```
-az login
+winget install -e --id Microsoft.AzureCLI
+az version
 ```
 #### 3. **Terraform installed** (v1.5+ recommended):
 ```
+winget install -e --id HashiCorp.Terraform
 terraform -version
+```
+#### 4. **Git installed**:
+```
+winget install -e --id Git.Git
+git version
 ```
 
 ---
 
 ### Deployment steps
 ```
-cd terraform/azure
+cd $HOME\Desktop
+git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
+cd .\cloudops-orchestrator\terraform\azure
+az login
 terraform init
 terraform apply -auto-approve
+
 ```
 After a few minutes, Terraform will show the public IP of the VM.
+```
+public_ip = "52.174.xxx.xxx"
+```
 Open it in your browser to verify that the application is running.
 
 ---
