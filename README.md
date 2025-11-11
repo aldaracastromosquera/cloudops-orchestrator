@@ -124,9 +124,10 @@ Este proyecto se distribuye bajo la licencia **MIT**, lo que significa que puede
 - Usarlo libremente para fines **educativos o profesionales**.  
 - **Modificarlo, compartirlo y adaptarlo**, siempre citando su origen.  
 
-📄 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
+Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
----
+══════════════════════════════════════════════════════════════════════
+
 
 ## 🇬🇧 English
 
@@ -165,7 +166,6 @@ cloudops-orchestrator/
 ├─ Makefile # Quick development commands
 └─ README.md # This document
 ```
-
 
 ---
 
@@ -253,6 +253,4 @@ This project is distributed under the **MIT license**, which means you can:
 - Use it freely for **educational or professional purposes**.  
 - **Modify, share, and adapt** it, always giving credit to the original source.  
 
-📄 See the [LICENSE](./LICENSE) file for more details.
-
----
+See the [LICENSE](./LICENSE) file for more details.
