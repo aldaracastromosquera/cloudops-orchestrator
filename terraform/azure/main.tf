@@ -1,133 +1,123 @@
+#  Define los recursos que Terraform desplegará en Microsoft Azure: grupo de recursos, red, VM y seguridad.
+
+
 terraform {
-  required_version = ">= 1.7.0"
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.100"
+      source  = "hashicorp/azurerm"     # Proveedor de Azure para Terraform
+      version = "~>3.116.0"             # Versión 
     }
   }
+
+  required_version = ">= 1.5.0"         # Versión de Terraform
 }
 
+# ---- Proveedor de Azure ----
 provider "azurerm" {
-  features {}
+  features {}                            # Habilita features por defecto
 }
 
-# RG
+# ---- Grupo de recursos ----
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.project_name}-rg"
-  location = var.location
+  name     = var.resource_group_name     # Nombre (variables.tf)
+  location = var.location                # Región (variables.tf)
 }
 
-# Red mínima: VNet + Subnet
+# ---- Red virtual ----
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.project_name}-vnet"
-  address_space       = ["10.10.0.0/16"]
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "${var.prefix}-vnet"                  # Nombre (variables.tf)
+  address_space       = ["10.0.0.0/16"]                       # Rango IP para toda la VNet
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado
 }
 
+# ---- Subred ----
 resource "azurerm_subnet" "subnet" {
-  name                 = "${var.project_name}-subnet"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = ["10.10.1.0/24"]
+  name                 = "${var.prefix}-subnet"               # Nombre (variables.tf)
+  resource_group_name  = azurerm_resource_group.rg.name       # Grupo de recursos creado
+  virtual_network_name = azurerm_virtual_network.vnet.name    # VNet creada
+  address_prefixes     = ["10.0.1.0/24"]                      # Rango IP específico de la subred
 }
 
-# NSG (22 y 80 abiertos, idealmente a tu IP)
-resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.project_name}-nsg"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  security_rule {
-    name                       = "HTTP"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefixes    = [var.allowed_cidr]
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "SSH"
-    priority                   = 110
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefixes    = [var.allowed_cidr]
-    destination_address_prefix = "*"
-  }
-}
-
-# IP pública
+# ---- IP pública ----
 resource "azurerm_public_ip" "pip" {
-  name                = "${var.project_name}-pip"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
+  name                = "${var.prefix}-pip"                   # Nombre (variables.tf)
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado  
+  allocation_method   = "Dynamic"                             # IP dinámica (cambia al reiniciar recursos)
 }
 
-# NIC
+# ---- Grupo de seguridad  ----
+resource "azurerm_network_security_group" "nsg" {
+  name                = "${var.prefix}-nsg"                   # Nombre (variables.tf)
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado
+
+  # Permitir tráfico HTTP (puerto 80) desde Internet
+  security_rule {
+    name                       = "HTTP"                       # Nombre de la regla
+    priority                   = 1001                         # Menor número = mayor prioridad
+    direction                  = "Inbound"                    # Tráfico entrante hacia la VM
+    access                     = "Allow"                      # Permitir
+    protocol                   = "Tcp"                        # Protocolo TCP 
+    source_port_range          = "*"                          # Cualquier puerto de origen
+    destination_port_range     = "80"                         # Puerto destino 80 (Nginx)
+    source_address_prefix      = "*"                          # Desde cualquier IP
+    destination_address_prefix = "*"                          # Hacia la VM
+  }
+
+  # Permitir acceso SSH (puerto 22) para administración
+  security_rule {
+    name                       = "SSH"                        # Nombre de la regla
+    priority                   = 1002                         # Menor número = mayor prioridad
+    direction                  = "Inbound"                    # Tráfico entrante hacia la VM
+    access                     = "Allow"                      # Permitir
+    protocol                   = "Tcp"                        # Protocolo TCP
+    source_port_range          = "*"                          # Cualquier puerto de origen
+    destination_port_range     = "22"                         # Puerto destino 22 (SSH)
+    source_address_prefix      = "*"                          # (Debería restringir a IP pública)
+    destination_address_prefix = "*"                          # Hacia la VM
+  }
+}
+
+# ---- Interfaz de red ----
 resource "azurerm_network_interface" "nic" {
-  name                = "${var.project_name}-nic"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "${var.prefix}-nic"                   # Nombre (variables.tf)
+  location            = var.location                          # Región (variables.tf)
+  resource_group_name = azurerm_resource_group.rg.name        # Grupo de recursos creado
 
   ip_configuration {
-    name                          = "primary"
-    subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
+    name                          = "internal"                    # Nombre de la configuración IP
+    subnet_id                     = azurerm_subnet.subnet.id      # Subred creada
+    private_ip_address_allocation = "Dynamic"                     # IP privada dinámica
+    public_ip_address_id          = azurerm_public_ip.pip.id      # Asocia la IP pública creada
   }
 }
 
-# Asociar NSG a la NIC
-resource "azurerm_network_interface_security_group_association" "nic_nsg" {
-  network_interface_id      = azurerm_network_interface.nic.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-# VM Ubuntu 22.04 LTS
+# ---- Máquina virtual Linux ----
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "${var.project_name}-vm"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  size                = var.vm_size
-  admin_username      = var.admin_username
-  network_interface_ids = [azurerm_network_interface.nic.id]
-
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = var.ssh_public_key
-  }
-
-  disable_password_authentication = true
+  name                  = "${var.prefix}-vm"                  # Nombre (variables.tf)
+  resource_group_name   = azurerm_resource_group.rg.name      # Grupo de recursos creado
+  location              = var.location                        # Región (variables.tf) 
+  size                  = var.vm_size                         # Tamaño de la VM (variables.tf)
+  admin_username        = var.admin_username                  # Administrador (variables.tf)
+  admin_password        = var.admin_password                  # Contraseña (variables.tf)
+  disable_password_authentication = false                     # Permite login por password (true para solo SSH)
+  network_interface_ids = [azurerm_network_interface.nic.id]  # NIC asociada a la VM
 
   os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-    disk_size_gb         = 30
+    caching              = "ReadWrite"                        # Caché de disco
+    storage_account_type = "Standard_LRS"                     # Disco estándar (barato)
   }
 
+  # Imagen base: Ubuntu 20.04 LTS (Focal)
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts"
     version   = "latest"
   }
 
-  # cloud-init para instalar docker, clonar repo y levantar compose
-  custom_data = base64encode(templatefile("${path.module}/cloud_init.yml", {
-    github_repo_url = var.github_repo_url
-  }))
-
-  tags = {
-    Project = var.project_name
-  }
+  # Script cloud-init (Base64) que instala Docker y levanta la app
+  custom_data = filebase64("${path.module}/user_data.sh")
 }
