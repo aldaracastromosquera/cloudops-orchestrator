@@ -49,14 +49,18 @@ jobs:
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      # --------------------------------------------------------
-      # Construcción de la imagen Docker de la aplicación.
-      # - Se etiqueta como "cloudops-app:ci"
-      # - Usa el Dockerfile ubicado en la carpeta ./app
-      # Esto no sube nada, solo valida que el Dockerfile funciona correctamente.
-      # --------------------------------------------------------
+      # # (opcional) listamos para depurar rutas visibles por el runner
+      - name: List repo tree
+        run: |
+          pwd
+          ls -la
+          echo "--- app/ ---"
+          ls -la app || true
+
+      # Build con contexto RAÍZ y Dockerfile en app/
       - name: Build app image
-        run: docker build -t cloudops-app:ci -f ./Dockerfile .
+        run: docker build -t cloudops-app:ci -f ./app/Dockerfile .
+
 
 
 
