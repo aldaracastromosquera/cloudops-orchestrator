@@ -1,6 +1,5 @@
 # Define como se ejecutan y se comunican entre si los contenedores
 # version Docker Compose
-version: "3.9"
 
 
 # ------------------------------------------------------------
