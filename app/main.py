@@ -64,3 +64,4 @@ def metrics():
 if __name__ == '__main__':
     # Inicia el servidor Flask escuchando en todas las interfaces (0.0.0.0) con puerto 8000 para que coincida con la configuración de Docker
     app.run(host='0.0.0.0', port=8000)
+

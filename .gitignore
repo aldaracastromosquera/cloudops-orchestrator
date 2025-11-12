@@ -4,11 +4,9 @@
 __pycache__/
 *.pyc
 
-
 # Archivos de entorno (.env)
 .env
 *.env
-
 
 # Archivos de Terraform : Estado y configuración local (datos de infrastructura o credenciales)
 **/.terraform/*
@@ -16,7 +14,6 @@ __pycache__/
 *.tfstate.*
 .terraform.lock.hcl
 terraform.tfvars
-
 
 # Entornos virtuales y basura del sistema: Entornos virtuales de Python y archivos de sistema de macOS
 **/.venv

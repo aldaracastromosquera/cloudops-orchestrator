@@ -22,3 +22,4 @@ EXPOSE 8000
 
 # Comando de arranque
 CMD ["python", "main.py"]
+

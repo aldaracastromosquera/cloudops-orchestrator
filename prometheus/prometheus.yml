@@ -1,44 +1,49 @@
+# -------------------------------------------------------------------
+# Configuración global de Prometheus
+# -------------------------------------------------------------------
 global:
-  scrape_interval: 15s
-  evaluation_interval: 30s
-  scrape_timeout: 10s
-  external_labels:
-    project: cloudops-orchestrator
+  scrape_interval: 15s        # Cada cuánto Prometheus recoge métricas
+  evaluation_interval: 30s    # Cada cuánto se evalúan reglas internas (si existieran)
+  scrape_timeout: 10s         # Tiempo máximo permitido para obtener métricas
+  external_labels:            # Etiquetas añadidas a TODAS las series almacenadas
+    project: cloudops-orchestrator   # Identificador global del proyecto
 
+# -------------------------------------------------------------------
+# Definición de trabajos (scrape jobs)
+# Aquí se especifican las "fuentes" de métricas
+# -------------------------------------------------------------------
 scrape_configs:
-  # --- Métricas de la app Flask ---
-  - job_name: "flask_app"
-    metrics_path: /metrics
+
+  # ---------------------------------------------------------------
+  # MÉTRICAS DE LA APP FLASK
+  # ---------------------------------------------------------------
+  - job_name: "flask_app"          # Nombre del job en Prometheus
+    metrics_path: /metrics         # Ruta específica donde la app expone sus métricas
     static_configs:
-      - targets: ["app:8000"]
+      - targets: ["app:8000"]      # contenedor "app", puerto 8000
         labels:
-          service: "app"
-          layer: "backend"
+          service: "app"           # Etiqueta custom que categoriza el servicio
+          layer: "backend"         # Etiqueta que indica la capa lógica
 
-  # --- (opcional) Métricas de Nginx si prefieres pasar por el proxy ---
-  # - job_name: "nginx_proxy"
-  #   metrics_path: /metrics
-  #   static_configs:
-  #     - targets: ["nginx:80"]
-  #       labels:
-  #         service: "nginx"
-  #         layer: "edge"
-
-  # --- (opcional) Node Exporter del host ---
-  # Si usas network_mode: host, apunta al host (ajusta IP/host según tu entorno).
-  - job_name: "node_exporter"
+  # ---------------------------------------------------------------
+  # MÉTRICAS DEL NODE EXPORTER (HOST / SISTEMA)
+  # ---------------------------------------------------------------
+  - job_name: "node_exporter"      # Nombre del job
     static_configs:
-    - targets: ["node_exporter:9100"]
+      - targets: ["node_exporter:9100"]   # Contenedor node_exporter expone métricas en 9100
 
     relabel_configs:
-      # ejemplo para limpiar el instance si es muy largo
+      # Regla para modificar etiquetas antes de guardar métricas
+      # En este caso, sobrescribe el valor de "instance" y lo simplifica
       - target_label: instance
-        replacement: "host"
+        replacement: "host"         # Así en lugar de un nombre largo aparecerá "host"
 
-  # --- (opcional) cAdvisor para contenedores ---
-  - job_name: "cadvisor"
+  # ---------------------------------------------------------------
+  # MÉTRICAS DE cADVISOR (CONTENEDORES DOCKER)
+  # ---------------------------------------------------------------
+  - job_name: "cadvisor"             # Nombre del job
     static_configs:
-      - targets: ["cadvisor:8080"]
+      - targets: ["cadvisor:8080"]   # cAdvisor expone métricas en su puerto interno 8080
         labels:
-          service: "cadvisor"
-          layer: "containers"
+          service: "cadvisor"        # Etiqueta que clasifica estas métricas como del servicio cadvisor
+          layer: "containers"        # Indica que son métricas relacionadas con contenedores

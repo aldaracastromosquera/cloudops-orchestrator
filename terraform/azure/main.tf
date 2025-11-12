@@ -1,11 +1,9 @@
 #  Define los recursos que Terraform desplegará en Microsoft Azure: grupo de recursos, red, VM y seguridad.
-
-
 terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm" # Proveedor de Azure para Terraform
-      version = "~>3.116.0"         # Versión 
+      version = "~>3.116.0"         # Versión del proveedor
     }
   }
 
@@ -19,21 +17,21 @@ provider "azurerm" {
 
 # ---- Grupo de recursos ----
 resource "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name # Nombre (variables.tf)
-  location = var.location            # Región (variables.tf)
+  name     = var.resource_group_name # Nombre 
+  location = var.location            # Región 
 }
 
 # ---- Red virtual ----
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.prefix}-vnet"           # Nombre (variables.tf)
+  name                = "${var.prefix}-vnet"           # Nombre 
   address_space       = ["10.0.0.0/16"]                # Rango IP para toda la VNet
-  location            = var.location                   # Región (variables.tf)
+  location            = var.location                   # Región 
   resource_group_name = azurerm_resource_group.rg.name # Grupo de recursos creado
 }
 
 # ---- Subred ----
 resource "azurerm_subnet" "subnet" {
-  name                 = "${var.prefix}-subnet"            # Nombre (variables.tf)
+  name                 = "${var.prefix}-subnet"            # Nombre 
   resource_group_name  = azurerm_resource_group.rg.name    # Grupo de recursos creado
   virtual_network_name = azurerm_virtual_network.vnet.name # VNet creada
   address_prefixes     = ["10.0.1.0/24"]                   # Rango IP específico de la subred
@@ -41,8 +39,8 @@ resource "azurerm_subnet" "subnet" {
 
 # ---- IP pública ----
 resource "azurerm_public_ip" "pip" {
-  name                = "${var.prefix}-pip"            # Nombre (variables.tf)
-  location            = var.location                   # Región (variables.tf)
+  name                = "${var.prefix}-pip"            # Nombre 
+  location            = var.location                   # Región 
   resource_group_name = azurerm_resource_group.rg.name # Grupo de recursos creado  
   allocation_method   = "Static"                       # Standard requiere estática 
   sku                 = "Standard"                     # Cambiar de Basic a Standard (requisito Azure, dio error)              
@@ -50,8 +48,8 @@ resource "azurerm_public_ip" "pip" {
 
 # ---- Grupo de seguridad  ----
 resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.prefix}-nsg"            # Nombre (variables.tf)
-  location            = var.location                   # Región (variables.tf)
+  name                = "${var.prefix}-nsg"            # Nombre 
+  location            = var.location                   # Región 
   resource_group_name = azurerm_resource_group.rg.name # Grupo de recursos creado
 
   # Permitir tráfico HTTP (puerto 80) desde Internet
@@ -79,12 +77,38 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"       # (Debería restringir a IP pública)
     destination_address_prefix = "*"       # Hacia la VM
   }
+
+    security_rule {
+    name                       = "allow_grafana"   # Nombre de la regla 
+    priority                   = 1003              # número bajo = mayor prioridad
+    direction                  = "Inbound"         # Tráfico que entra hacia la VM
+    access                     = "Allow"           # Permitir
+    protocol                   = "Tcp"             # Protocolo TCP
+    source_port_range          = "*"               # ualquier puerto de origen
+    destination_port_range     = "3000"            # Puerto destino 3000 (puerto donde Grafana escucha por defecto)
+    source_address_prefix      = "*"               # Desde cualquier IP
+    destination_address_prefix = "*"               # Hacia la VM
+  }
+
+
+  security_rule {
+    name                       = "allow_prometheus" # Nombre de la regla
+    priority                   = 1004               # número bajo = mayor prioridad. Después de Grafana.
+    direction                  = "Inbound"          # Tráfico que entra hacia la VM
+    access                     = "Allow"            # Permitir
+    protocol                   = "Tcp"              # Protocolo TCP
+    source_port_range          = "*"                # Cualquier puerto de origen
+    destination_port_range     = "9090"             # Puerto destino 9090 (Prometheus UI y API)
+    source_address_prefix      = "*"                # Desde cualquier IP
+    destination_address_prefix = "*"                # Hacia la VM
+  }
+
 }
 
 # ---- Interfaz de red (NIC) ----
 resource "azurerm_network_interface" "nic" {
-  name                = "${var.prefix}-nic"            # Nombre (variables.tf)
-  location            = var.location                   # Región (variables.tf)
+  name                = "${var.prefix}-nic"            # Nombre 
+  location            = var.location                   # Región 
   resource_group_name = azurerm_resource_group.rg.name # Grupo de recursos creado
 
   ip_configuration {
@@ -104,12 +128,12 @@ resource "azurerm_network_interface_security_group_association" "nic_nsg" {
 
 # ---- Máquina virtual Linux ----
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                            = "${var.prefix}-vm"                 # Nombre (variables.tf)
+  name                            = "${var.prefix}-vm"                 # Nombre 
   resource_group_name             = azurerm_resource_group.rg.name     # Grupo de recursos creado
-  location                        = var.location                       # Región (variables.tf) 
-  size                            = var.vm_size                        # Tamaño de la VM (variables.tf)
-  admin_username                  = var.admin_username                 # Administrador (variables.tf)
-  admin_password                  = var.admin_password                 # Contraseña (variables.tf)
+  location                        = var.location                       # Región  
+  size                            = var.vm_size                        # Tamaño de la VM 
+  admin_username                  = var.admin_username                 # Administrador 
+  admin_password                  = var.admin_password                 # Contraseña 
   disable_password_authentication = false                              # Permite login por password (true para solo SSH)
   network_interface_ids           = [azurerm_network_interface.nic.id] # NIC asociada a la VM
 

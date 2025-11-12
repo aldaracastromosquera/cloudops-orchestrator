@@ -47,4 +47,4 @@ terraform -chdir=terraform/azure fmt
 
 # Valida la sintaxis y estructura de los archivos Terraform
 lint:
-	terraform -chdir=terraform/azure validate
+terraform -chdir=terraform/azure validate

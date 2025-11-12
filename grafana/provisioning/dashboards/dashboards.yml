@@ -1,11 +1,17 @@
-apiVersion: 1
+# -------------------------------------------------------------------
+# Archivo de aprovisionamiento de Grafana para dashboards.
+# Indica a Grafana dónde debe buscar archivos .json con dashboards
+# para cargarlos automáticamente al arrancar el contenedor.
+# -------------------------------------------------------------------
+apiVersion: 1   # Versión del formato de provisioning de Grafana
+
 providers:
-  - name: "Local Dashboards"
-    orgId: 1
-    folder: ""
-    type: file
-    disableDeletion: false
-    editable: true
-    updateIntervalSeconds: 30
+  - name: "Local Dashboards"      # Nombre del proveedor de dashboards
+    orgId: 1                      # ID de la organización (por defecto la nº1)
+    folder: ""                    # Carpeta dentro de Grafana donde se guardarán (vacío = raíz)
+    type: file                    # Indica que los dashboards provienen de archivos locales
+    disableDeletion: false        # Permite eliminar dashboards desde la interfaz de Grafana
+    editable: true                # Permite editarlos después de importados
+    updateIntervalSeconds: 30     # Cada cuánto Grafana revisa si hay cambios en los archivos
     options:
-      path: /etc/grafana/provisioning/dashboards
+      path: /etc/grafana/provisioning/dashboards   # Ruta dentro del contenedor donde buscar dashboards .json

@@ -106,3 +106,4 @@ curl -sS http://localhost/health || true
 ss -tulpn | grep -E ':80|:8000' || true
 
 echo "---> Despliegue completado con éxito"
+

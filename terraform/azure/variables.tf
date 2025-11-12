@@ -18,9 +18,9 @@ variable "prefix" {
   default = "cloudops"
 }
 
-# Tamaño de la máquina virtual (SKU). Define CPU, RAM y coste.
+# Tamaño de la máquina virtual. Define CPU, RAM y coste.
 variable "vm_size" {
-  # 'Standard_B1s' es una instancia económica ideal para entornos de prueba.
+  # 'Standard_B1s' para entornos de prueba.
   default = "Standard_B1s"
 }
 
@@ -32,7 +32,7 @@ variable "admin_username" {
 
 # Contraseña del usuario administrador.
 variable "admin_password" {
-  # IMPORTANTE: se recomienda sobrescribir este valor al aplicar Terraform.
+  # IMPORTANTE: se recomienda sobrescribir este valor.
   # Puede establecerse mediante 'terraform apply -var "admin_password=MiContraseñaSegura"'
   default = "CloudOps123!"
 }

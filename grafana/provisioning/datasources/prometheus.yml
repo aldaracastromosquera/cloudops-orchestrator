@@ -1,8 +1,14 @@
-apiVersion: 1
+# -------------------------------------------------------------------
+# Archivo de aprovisionamiento de Grafana para el datasource Prometheus
+# Permite que Grafana configure automáticamente la conexión a Prometheus
+# sin intervención manual desde la interfaz web.
+# -------------------------------------------------------------------
+apiVersion: 1   # Versión del esquema de provisioning de Grafana
+
 datasources:
-  - name: Prometheus
-    type: prometheus
-    access: proxy
-    url: http://prometheus:9090
-    isDefault: true
-    editable: true
+  - name: Prometheus              # Nombre que aparecerá en Grafana para este datasource
+    type: prometheus              # Tipo de datasource (Prometheus)
+    access: proxy                 # Grafana actúa como proxy para las consultas
+    url: http://prometheus:9090   # Dirección del contenedor Prometheus en la red de Docker
+    isDefault: true               # Lo marca como el datasource principal del sistema
+    editable: true                # Permite modificarlo desde la interfaz web si se desea

@@ -62,20 +62,20 @@ services:
     image: prom/prometheus:v2.54.1
     container_name: cloudops-prometheus
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.retention.time=15d"
-      - "--web.enable-lifecycle"
+      - "--config.file=/etc/prometheus/prometheus.yml"            # Ruta al archivo de configuración
+      - "--storage.tsdb.retention.time=15d"                       # Retención de datos durante 15 días
+      - "--web.enable-lifecycle"                                  # Permite recargar configuración vía API
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prom_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro  # Monta la configuración
+      - prom_data:/prometheus                                           # Almacena la base de series temporales
     ports:
-      - "9090:9090"
+      - "9090:9090"                                               # Expone la UI de Prometheus
     networks: [app_net]
     depends_on:
-      - app
+      - app                                                      # Necesita que la app esté arriba para scrapearla
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:9090/-/healthy"]
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:9090/-/healthy"]  # Chequea salud de Prometheus
       interval: 15s
       timeout: 5s
       retries: 5
@@ -84,30 +84,29 @@ services:
     image: grafana/grafana:11.2.2
     container_name: cloudops-grafana
     environment:
-      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
-      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}        # Usuario admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}# Contraseña
+      GF_USERS_ALLOW_SIGN_UP: "false"                             # Desactiva creación de cuentas
     ports:
-      - "3000:3000"
+      - "3000:3000"                                               # Expone la UI de Grafana
     volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
-      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - grafana_data:/var/lib/grafana                             # Persistencia de dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro # Datasources automáticos
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro   # Dashboards automáticos
     depends_on:
-      - prometheus
+      - prometheus                                                # Requiere Prometheus para funcionar
     networks: [app_net]
     restart: unless-stopped
-
 
   node_exporter:
     image: prom/node-exporter:v1.8.2
     container_name: cloudops-node-exporter
     ports:
-      - "9100:9100"
+      - "9100:9100"                                               # Métricas expuestas en 9100
     command:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)' # Ignora FS especiales
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -115,26 +114,24 @@ services:
     networks: [app_net]
     restart: unless-stopped
 
-
-
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cloudops-cadvisor
     ports:
-      - "8081:8080"    # UI cadvisor (opcional); Prometheus scrapea en :8080/metrics
+      - "8081:8080"                                               # UI de cAdvisor (puerto 8081 externo)
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/lib/docker/:/var/lib/docker:ro                       # Acceso a info de contenedores
     networks: [app_net]
     restart: unless-stopped
 
 volumes:
-  db_data:
-  prom_data:
-  grafana_data:
+  db_data:        # Persistencia de PostgreSQL
+  prom_data:      # Base de datos de Prometheus
+  grafana_data:   # Dashboards y config persistente de Grafana
 
 networks:
   app_net:
-    driver: bridge                           # Tipo de red: "bridge" (comunicación interna entre contenedores)
+    driver: bridge      # Red Docker local donde todos los servicios se comunican                         
