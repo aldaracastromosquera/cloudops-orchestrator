@@ -112,8 +112,8 @@ jobs:
         with:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          key: ${{ secrets.AZURE_SSH__KEY }}
+          port: 22
+          key: ${{ secrets.AZURE_SSH_KEY }}
           script_stop: true
           script: |
             set -euo pipefail
