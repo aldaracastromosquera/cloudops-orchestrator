@@ -58,15 +58,83 @@ services:
       - "80:80"                                                   # Expone el puerto 80
     networks: [app_net]                      # Usa la misma red para comunicarse con la app
 
-# ------------------------------------------------------------
-# Volúmenes: datos persistentes
-# ------------------------------------------------------------
-volumes:
-  db_data:                                   # Volumen donde Postgres guarda la base de datos
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: cloudops-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks: [app_net]
+    depends_on:
+      - app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:9090/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
-# ------------------------------------------------------------
-# Red interna compartida
-# ------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:11.2.2
+    container_name: cloudops-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+    depends_on:
+      - prometheus
+    networks: [app_net]
+    restart: unless-stopped
+
+
+  node_exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: cloudops-node-exporter
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks: [app_net]
+    restart: unless-stopped
+
+
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cloudops-cadvisor
+    ports:
+      - "8081:8080"    # UI cadvisor (opcional); Prometheus scrapea en :8080/metrics
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks: [app_net]
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  prom_data:
+  grafana_data:
+
 networks:
   app_net:
     driver: bridge                           # Tipo de red: "bridge" (comunicación interna entre contenedores)

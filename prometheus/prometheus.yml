@@ -1,0 +1,44 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+  scrape_timeout: 10s
+  external_labels:
+    project: cloudops-orchestrator
+
+scrape_configs:
+  # --- Métricas de la app Flask ---
+  - job_name: "flask_app"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["app:8000"]
+        labels:
+          service: "app"
+          layer: "backend"
+
+  # --- (opcional) Métricas de Nginx si prefieres pasar por el proxy ---
+  # - job_name: "nginx_proxy"
+  #   metrics_path: /metrics
+  #   static_configs:
+  #     - targets: ["nginx:80"]
+  #       labels:
+  #         service: "nginx"
+  #         layer: "edge"
+
+  # --- (opcional) Node Exporter del host ---
+  # Si usas network_mode: host, apunta al host (ajusta IP/host según tu entorno).
+  - job_name: "node_exporter"
+    static_configs:
+    - targets: ["node_exporter:9100"]
+
+    relabel_configs:
+      # ejemplo para limpiar el instance si es muy largo
+      - target_label: instance
+        replacement: "host"
+
+  # --- (opcional) cAdvisor para contenedores ---
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
+        labels:
+          service: "cadvisor"
+          layer: "containers"
