@@ -92,44 +92,57 @@ jobs:
           terraform validate
 
   deploy:
+    # --------------------------------------------------------
+    # Segundo trabajo: despliegue en Azure
+    # Se ejecuta solo si el job anterior (build_and_validate) fue exitoso
+    # --------------------------------------------------------
     name: Deploy to Azure VM
     runs-on: ubuntu-latest
     needs: build_and_validate
 
     steps:
+      # --------------------------------------------------------
+      # Checkout: descarga el código del repositorio
+      # --------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Add host to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.AZURE_VM_IP }}" >> ~/.ssh/known_hosts
-
-      - name: Connect & deploy
+      # --------------------------------------------------------
+      # Conexión SSH a la máquina virtual de Azure
+      # - Usa la acción appleboy/ssh-action para ejecutar comandos remotos
+      # - Requiere configurar los secretos en GitHub:
+      #     AZURE_VM_IP       → IP pública de la VM
+      #     AZURE_VM_USER     → Usuario SSH (por ejemplo: azureuser)
+      #     AZURE_SSH_KEY     → Clave privada (contenido del id_rsa)
+      # --------------------------------------------------------
+      - name: Connect to Azure VM and deploy
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
           key: ${{ secrets.AZURE_SSH_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script_stop: true
           script: |
-            set -euo pipefail
+            # ------------------------------------------------
+            # Navega a la carpeta del proyecto en la VM
+            # ------------------------------------------------
+            cd /opt/cloudops
 
-            APP_DIR=/opt/cloudops
+            # ------------------------------------------------
+            # Actualiza el repositorio con la última versión del código
+            # ------------------------------------------------
+            git pull origin main
 
-            # Evita warning de git (por si acaso)
-            git config --global --add safe.directory "$APP_DIR" || true
-
-            cd "$APP_DIR"
-
-            # Si usas git para desplegar:
-            git fetch --all --prune || true
-            git reset --hard origin/main || true
-
-            # Compose sin 'version:' (si no lo quitaste, no pasa nada; es un warning)
+            # ------------------------------------------------
+            # Descarga las últimas imágenes definidas en docker-compose.yml
+            # ------------------------------------------------
             docker compose pull
-            docker compose up -d --build --remove-orphans
 
-            # Limpieza no destructiva
-            docker system prune -f || true
+            # ------------------------------------------------
+            # Reconstruye y levanta los contenedores en segundo plano
+            # ------------------------------------------------
+            docker compose up -d --build
+
+            # ------------------------------------------------
+            # Elimina imágenes antiguas y no utilizadas
+            # ------------------------------------------------
+            docker system prune -f
