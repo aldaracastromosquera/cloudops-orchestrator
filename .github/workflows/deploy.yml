@@ -146,3 +146,5 @@ jobs:
             # Elimina imágenes antiguas y no utilizadas
             # ------------------------------------------------
             docker system prune -f
+
+            

@@ -19,3 +19,4 @@ __pycache__/
 
 # Ignora el archivo de variables de entorno, que puede contener credenciales o secretos.
 .env
+
