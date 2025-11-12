@@ -107,42 +107,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # --------------------------------------------------------
-      # Conexión SSH a la máquina virtual de Azure
-      # - Usa la acción appleboy/ssh-action para ejecutar comandos remotos
-      # - Requiere configurar los secretos en GitHub:
-      #     AZURE_VM_IP       → IP pública de la VM
-      #     AZURE_VM_USER     → Usuario SSH (por ejemplo: azureuser)
-      #     AZURE_SSH_KEY     → Clave privada (contenido del id_rsa)
-      # --------------------------------------------------------
-      - name: Connect to Azure VM and deploy
+      - name: Deploy to Azure VM
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.AZURE_VM_IP }}
-          username: ${{ secrets.AZURE_VM_USER }}
-          key: ${{ secrets.AZURE_SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
           script: |
-            # ------------------------------------------------
-            # Navega a la carpeta del proyecto en la VM
-            # ------------------------------------------------
-            cd /opt/cloudops
+            set -euo pipefail
 
-            # ------------------------------------------------
-            # Actualiza el repositorio con la última versión del código
-            # ------------------------------------------------
-            git pull origin main
+            APP_DIR=/opt/cloudops
 
-            # ------------------------------------------------
-            # Descarga las últimas imágenes definidas en docker-compose.yml
-            # ------------------------------------------------
-            docker compose pull
+            # 1) Git: marca el repo como "safe" o arregla ownership
+            if [ -d "$APP_DIR/.git" ]; then
+              git config --global --add safe.directory "$APP_DIR" || true
+            fi
+            # (mejor) si el repo debe pertenecer a tu usuario de despliegue:
+            # sudo chown -R ${USER}:${USER} "$APP_DIR" || true
 
-            # ------------------------------------------------
-            # Reconstruye y levanta los contenedores en segundo plano
-            # ------------------------------------------------
-            docker compose up -d --build
+            cd "$APP_DIR"
 
-            # ------------------------------------------------
-            # Elimina imágenes antiguas y no utilizadas
-            # ------------------------------------------------
-            docker system prune -f
+            # 2) Trae cambios del repo (si despliegas desde git)
+            # quita estas líneas si NO usas git pull para desplegar
+            git fetch --all --prune || true
+            git reset --hard origin/main || true
+
+            # 3) Docker con sudo (evita el permiso denegado)
+            # Quita el campo 'version:' del compose si sigue en tu YAML
+            sudo docker compose pull
+            sudo docker compose up -d --build --remove-orphans
+            sudo docker system prune -f || true
