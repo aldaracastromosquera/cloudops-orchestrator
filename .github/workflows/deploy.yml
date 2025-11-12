@@ -110,10 +110,10 @@ jobs:
       - name: Deploy to Azure VM
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          host: ${{ secrets.AZURE_VM_IP }}
+          username: ${{ secrets.AZURE_VM_USER }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.AZURE_SSH__KEY }}
           script_stop: true
           script: |
             set -euo pipefail
