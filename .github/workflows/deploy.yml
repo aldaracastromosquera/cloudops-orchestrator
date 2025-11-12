@@ -92,44 +92,44 @@ jobs:
           terraform validate
 
   deploy:
-    # --------------------------------------------------------
-    # Segundo trabajo: despliegue en Azure
-    # Se ejecuta solo si el job anterior (build_and_validate) fue exitoso
-    # --------------------------------------------------------
     name: Deploy to Azure VM
     runs-on: ubuntu-latest
     needs: build_and_validate
 
     steps:
-      # --------------------------------------------------------
-      # Checkout: descarga el código del repositorio
-      # --------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy to Azure VM
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.AZURE_VM_IP }}" >> ~/.ssh/known_hosts
+
+      - name: Connect & deploy
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.AZURE_VM_IP }}
           username: ${{ secrets.AZURE_VM_USER }}
-          port: 22 
           key: ${{ secrets.AZURE_SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
           script_stop: true
           script: |
             set -euo pipefail
 
             APP_DIR=/opt/cloudops
 
-            # Evita el warning de git por ownership
+            # Evita warning de git (por si acaso)
             git config --global --add safe.directory "$APP_DIR" || true
 
             cd "$APP_DIR"
 
-            # Actualiza código
+            # Si usas git para desplegar:
             git fetch --all --prune || true
             git reset --hard origin/main || true
 
-            # Despliegue Docker (sin sudo)
+            # Compose sin 'version:' (si no lo quitaste, no pasa nada; es un warning)
             docker compose pull
             docker compose up -d --build --remove-orphans
+
+            # Limpieza no destructiva
             docker system prune -f || true
