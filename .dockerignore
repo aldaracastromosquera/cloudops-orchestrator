@@ -1,8 +1,21 @@
+# Ignora el directorio de control de versiones de Git.
 .git
+
+# Ignora configuraciones y flujos de CI/CD de GitHub.
 .github
+
+# Ignora archivos de infraestructura (Terraform) que no deben ir dentro de la imagen.
 terraform
+
+# Ignora documentación y manuales del proyecto.
 docs
+
+# Ignora archivos Markdown (README, guías, etc.).
 *.md
+
+# Ignora cachés de Python (archivos compilados o temporales).
 __pycache__/
 *.pyc
+
+# Ignora el archivo de variables de entorno, que puede contener credenciales o secretos.
 .env
