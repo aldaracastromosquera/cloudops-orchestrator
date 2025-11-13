@@ -81,10 +81,6 @@ Toda la documentación extendida se encuentra en:
 
 ➡ [docs/architecture.md](./docs/arquitecture.md) — Componentes del sistema, servicios Docker, pipeline de métricas, diagramas
 
-➡ [docs/monitoring.md](./docs/monitoring.md) — Prometheus, dashboards de Grafana, exporters, generación de tráfico
-
-➡ [docs/cicd.md](./docs/cicd.md) — Pipeline de despliegue mediante GitHub Actions
-
 ---
 
 ## Autor
@@ -179,12 +175,6 @@ To avoid duplication and improve navigation, all extended guides have been moved
 ➡ [docs/README-AZURE.md](./docs/README-azure.md) — Terraform, VM provisioning, cloud-init, monitoring stack, PromQL, and routes
 
 ➡ [docs/architecture.md](./docs/arquitecture.md) — System components, Docker services, metrics pipeline, diagrams
-
-➡ [docs/monitoring.md](./docs/monitoring.md) — Prometheus, Grafana dashboards, exporters, test traffic
-
-➡ [docs/cicd.md](./docs/cicd.md) — GitHub Actions deployment pipeline
-
-Each document focuses on a single topic and includes examples, screenshots, diagrams, and usage instructions.
 
 ---
 
