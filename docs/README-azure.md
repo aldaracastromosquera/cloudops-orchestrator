@@ -326,7 +326,6 @@ You should see:
 | **cAdvisor**    | **8081**           | Container metrics                                |
 | **Node Exporter** | **9100**         | Host metrics (CPU, RAM, disk…)                   |
 
----
 
 #### 7.2. Useful URLs After Deployment
 
