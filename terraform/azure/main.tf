@@ -78,16 +78,16 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"       # Hacia la VM
   }
 
-    security_rule {
-    name                       = "allow_grafana"   # Nombre de la regla 
-    priority                   = 1003              # número bajo = mayor prioridad
-    direction                  = "Inbound"         # Tráfico que entra hacia la VM
-    access                     = "Allow"           # Permitir
-    protocol                   = "Tcp"             # Protocolo TCP
-    source_port_range          = "*"               # ualquier puerto de origen
-    destination_port_range     = "3000"            # Puerto destino 3000 (puerto donde Grafana escucha por defecto)
-    source_address_prefix      = "*"               # Desde cualquier IP
-    destination_address_prefix = "*"               # Hacia la VM
+  security_rule {
+    name                       = "allow_grafana" # Nombre de la regla 
+    priority                   = 1003            # número bajo = mayor prioridad
+    direction                  = "Inbound"       # Tráfico que entra hacia la VM
+    access                     = "Allow"         # Permitir
+    protocol                   = "Tcp"           # Protocolo TCP
+    source_port_range          = "*"             # ualquier puerto de origen
+    destination_port_range     = "3000"          # Puerto destino 3000 (puerto donde Grafana escucha por defecto)
+    source_address_prefix      = "*"             # Desde cualquier IP
+    destination_address_prefix = "*"             # Hacia la VM
   }
 
 
