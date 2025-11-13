@@ -48,6 +48,27 @@ cd /opt/cloudops
 # Si no existe un archivo .env, copia el .env.example para usar valores por defecto.
 [ -f .env ] || { [ -f .env.example ] && cp .env.example .env || true; }
 
+# ---------------------------------------------------------
+# Crear usuario 'cloudops' solo si no existe y configurar clave pública
+# ---------------------------------------------------------
+PUB='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN2bGcQGUHOBPmpN/9Png51NlonN1FFUQKcMAPhwazfK github-actions@cloudops-orchestration'
+
+# Crear usuario solo si no existe
+id -u cloudops >/dev/null 2>&1 || useradd -m -s /bin/bash cloudops
+
+# Crear carpeta .ssh y añadir clave pública
+mkdir -p /home/cloudops/.ssh
+echo "$PUB" >> /home/cloudops/.ssh/authorized_keys
+
+# Permisos correctos
+chown -R cloudops:cloudops /home/cloudops/.ssh
+chmod 700 /home/cloudops/.ssh
+chmod 600 /home/cloudops/.ssh/authorized_keys
+
+# Reiniciar ssh si aplica
+systemctl restart ssh || systemctl restart sshd || true
+# ---------------------------------------------------------
+
 echo "[5/7] Configurando Nginx (si no existe)..."
 # Crea la carpeta de configuración y genera un archivo default.conf básico.
 mkdir -p nginx
