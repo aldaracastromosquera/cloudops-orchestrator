@@ -297,7 +297,7 @@ vm_size             = "Standard_B2s"
 ```
 terraform plan
 ```
-### 6. Deploy infraestructure
+### 6. Deploy infrastructure
 ```
 terraform apply -auto-approve
 ```

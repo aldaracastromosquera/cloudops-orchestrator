@@ -1,251 +1,407 @@
-# CLOUDOPS ORCHESTRATOR
+# CloudOps Orchestrator
 
 ## 🇪🇸 Español
 
-### Descripción general
-**CloudOps Orchestrator** es una herramienta modular que permite **desplegar aplicaciones Docker** de forma automática en distintos entornos (local, Azure, AWS y GCP).  
-Integra **Terraform** para la infraestructura como código (IaC), **Docker Compose** para entornos locales y **GitHub Actions** para CI/CD.  
-Incluye **Prometheus y Grafana** para monitorización básica y exposición de métricas, siguiendo las mejores prácticas DevOps.
+# CloudOps Orchestrator
+
+CloudOps Orchestrator is a fully automated deployment and monitoring solution built with **Flask**, **Docker Compose**, **PostgreSQL**, **Nginx**, **Prometheus**, and **Grafana**. It includes optional infrastructure automation using **Terraform** and **Azure**, as well as CI/CD integration with **GitHub Actions**.
+
+This README provides a high‑level overview of the project. The detailed deployment guides, architecture explanations, and monitoring documentation have been moved to the `docs/` directory for clarity and maintainability.
 
 ---
 
-### Estructura del proyecto
+## 🚀 Features
+
+* Containerized backend with **Flask**
+* Reverse proxy using **Nginx**
+* Persistent storage using **PostgreSQL**
+* Metrics exported via **Prometheus** format
+* Dashboards provided by **Grafana**
+* System- and container-level metrics via **Node Exporter** and **cAdvisor**
+* Optional **Azure deployment** automated with **Terraform**
+* Optional **GitHub Actions CI/CD** deployment pipeline
+
+---
+
+## 📁 Project Structure
+
 ```
 cloudops-orchestrator/
-├─ app/ # Código fuente de la aplicación Flask
-│ ├─ main.py # Endpoints + métricas Prometheus
-│ ├─ Dockerfile # Imagen de la app
-│ └─ requirements.txt # Dependencias Python
-│
-├─ nginx/ # Configuración del proxy inverso Nginx
-│ └─ default.conf
-│
-├─ terraform/ # Infraestructura como Código (IaC)
-│ ├─ azure/
-│ ├─ aws/
-│ └─ gcp/
-│
-├─ docs/ # Documentación por proveedor cloud
-│ ├─ README-azure.md
-│ ├─ README-aws.md
-│ └─ README-gcp.md
-│
-├─ .github/workflows/ # Pipeline CI/CD (validación automática)
-│ └─ deploy.yml
-│
-├─ docker-compose.yml # Stack local: app + db + nginx
-├─ Makefile # Comandos rápidos para desarrollo
-└─ README.md # Este documento
+├─ app/             # Flask backend
+├─ nginx/           # Reverse proxy configuration
+├─ prometheus/      # Prometheus config
+├─ grafana/         # Datasources & dashboards provisioning
+├─ terraform/       # Full Azure deployment module
+├─ docs/            # Extended documentation
+└─ docker-compose.yml
 ```
+
+For in‑depth documentation on each module, refer to the corresponding files inside `docs/`.
 
 ---
 
-### Ejecución local
+## 📄 Documentation
 
-#### Requisitos previos
-- Docker + Docker Compose  
-- Python 3.10+ (solo si se quiere ejecutar sin contenedor)  
-- Terraform (para despliegue en nube)
+To avoid duplication and improve navigation, all extended guides have been moved to:
 
-#### Pasos rápidos
+➡ **`docs/azure-deployment.md`** — Terraform, VM provisioning, cloud-init, monitoring stack, PromQL, and routes
 
-##### 1. Clonar el repositorio
-```
-git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
-cd cloudops-orchestrator
-```
+➡ **`docs/architecture.md`** — System components, Docker services, metrics pipeline, diagrams
 
-##### 2. Levantar los servicios
-```
-make up
-```
+➡ **`docs/monitoring.md`** — Prometheus, Grafana dashboards, exporters, test traffic
 
-##### 3. Ver logs
-```
-make logs
-```
-La aplicación quedará accesible en http://localhost:8000
+➡ **`docs/cicd.md`** — GitHub Actions deployment pipeline
 
-Endpoints disponibles:
-
-- / → Mensaje principal
-- /health → Estado del servicio
-- /metrics → Métricas Prometheus
-
----
- 
-### Filosofía del proyecto
->“Automatiza todo lo que puedas, pero entiende lo que automatizas.”
-
-Este proyecto busca combinar aprendizaje y práctica real de DevOps, abarcando:
-
-- Infraestructura reproducible con Terraform
-- Despliegue modular por proveedor cloud
-- Contenedores portables con Docker
-- Automatización CI/CD con GitHub Actions
-- Monitorización y métricas con Prometheus + Grafana
+Each document focuses on a single topic and includes examples, screenshots, diagrams, and usage instructions.
 
 ---
 
-### Roadmap
+## ▶ Running Locally
 
-|  Fase |  Descripción |  Estado |
-|:--------:|:---------------|:-----------|
-| 1️ | **Core Local** — Docker Compose + Flask + Nginx + Postgres | Completado |
-| 2️ | **Infraestructura Cloud** — Terraform (Azure) | Completado |
-| 3️ | **CI/CD** — Validación y despliegue automático | Completado |
-| 4️ | **Monitoring** — Prometheus + Grafana | Completado |
-| 5️ | **Multi-Cloud** — Despliegue completo en todas las nubes | Próximamente |
+You can run the entire stack locally using Docker Compose:
 
+```bash
+docker compose up -d --build
+```
 
----
+Access the services:
 
-### Tecnologías utilizadas
-
-- Python 3.12
-- Flask
-- Prometheus Client
-- Docker / Docker Compose
-- Terraform
-- Nginx
-- GitHub Actions
+* App: [http://localhost/](http://localhost/)
+* Metrics: [http://localhost/metrics](http://localhost/metrics)
+* Prometheus: [http://localhost:9090](http://localhost:9090)
+* Grafana: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-### Autor
+## ☁ Azure Deployment
+
+If you want to deploy CloudOps Orchestrator in Microsoft Azure using Terraform:
+
+➡ Follow the full guide in **`docs/azure-deployment.md`**.
+
+The guide explains:
+
+* How to deploy the VM and networking
+* How cloud-init (`user_data.sh`) installs and provisions the stack
+* Prometheus/Grafana automatic setup
+* Useful URLs & dashboards
+
+---
+
+## 🤖 CI/CD Deployment (Optional)
+
+The repository includes a GitHub Actions workflow that can:
+
+* Validate Terraform
+* SSH into the Azure VM
+* Pull and redeploy updated Docker services
+
+Full documentation:
+➡ `docs/cicd.md`
+
+---
+
+## 📜 License
+
+This project is distributed under the **MIT License**. See the `LICENSE` file for details.
+
+---
+
+## ✨ Author
+
+**Aldara Castro Mosquera**
+
+Cloud & DevOps Enthusiast — Galicia, Spain
+
+---
+
+# 🇪🇸 Versión en Español
+
+# CloudOps Orchestrator
+
+CloudOps Orchestrator es una solución completa de despliegue y monitorización construida con **Flask**, **Docker Compose**, **PostgreSQL**, **Nginx**, **Prometheus** y **Grafana**. Incluye además automatización opcional de infraestructura mediante **Terraform** y **Azure**, así como un flujo CI/CD mediante **GitHub Actions**.
+
+Este README ofrece una visión general del proyecto.
+---
+
+## Características
+
+* Backend contenedorizado con **Flask**
+* Proxy inverso con **Nginx**
+* Base de datos persistente con **PostgreSQL**
+* Exportación de métricas en formato Prometheus
+* Dashboards automáticos con **Grafana**
+* Métricas del sistema y contenedores mediante **Node Exporter** y **cAdvisor**
+* Despliegue opcional en **Microsoft Azure** mediante **Terraform**
+* Pipeline CI/CD opcional usando **GitHub Actions**
+
+---
+
+## Estructura del Proyecto
+
+```
+cloudops-orchestrator/
+├── app/
+│   ├── main.py                     # Aplicación Flask
+│   ├── Dockerfile                  # Imagen del backend
+│   ├── requirements.txt            # Dependencias Python
+│   └── .env.example                # Variables de entorno
+│
+├── nginx/
+│   ├── default.conf                # Proxy inverso hacia Flask
+│
+├── prometheus/
+│   ├── prometheus.yml              # Configuración de scraping
+│
+├── grafana/
+│   └── provisioning/
+│       ├── datasources/
+│       │   └── prometheus.yml      # Datasource Prometheus
+│       └── dashboards/
+│           ├── dashboards.yml      # Provisionamiento de dashboards
+│           └── cloudops-dashboard.json   # Dashboard principal
+│
+├── terraform/
+│   └── azure/
+│       ├── main.tf                 # Recursos Azure (VM, VNet, NSG…)
+│       ├── variables.tf            # Variables Terraform
+│       ├── outputs.tf              # IP pública, nombre VM…
+│       ├── user_data.sh            # Cloud-init (instala Docker + app)
+│
+├── docs/
+│   ├── azure-deployment.md         # Guía completa de despliegue en Azure
+│   ├── architecture.md             # Arquitectura de la plataforma
+│   ├── monitoring.md               # Monitorización (Prometheus/Grafana)
+│   └── cicd.md                     # CI/CD con GitHub Actions
+│
+├── .github/
+│   └── workflows/
+│       ├── deploy.yml              # Despliegue automático a Azure por 
+│
+├── docker-compose.yml              # Orquestación completa del stack
+├── README.md                       # README principal (inglés)
+├── LICENSE                         # MIT License
+├── Makefile                        # Comandos útiles (opcional)
+├── .gitignore                      # Ignorar archivos
+└── .dockerignore                   # Ignorar archivos en builds Docker
+
+```
+
+Para documentación detallada de cada módulo, revisa los archivos dentro de [docs/].(./docs)
+
+---
+
+## Documentación
+
+Toda la documentación extendida se encuentra en:
+
+➡ [docs/README-AZURE.md](./docs/README-azure.md) — Terraform, provisión de la VM, cloud-init, monitorización, PromQL, rutas
+
+➡ [docs/architecture.md](./docs/arquitecture.md) — Componentes del sistema, servicios Docker, pipeline de métricas, diagramas
+
+➡ [docs/monitoring.md](./docs/monitoring.md) — Prometheus, dashboards de Grafana, exporters, generación de tráfico
+
+➡ [docs/cicd.md](./docs/cicd.md) — Pipeline de despliegue mediante GitHub Actions
+
+---
+
+## Ejecutar Localmente
+
+Puedes ejecutar todo el stack usando Docker Compose:
+
+```bash
+docker compose up -d --build
+```
+
+Accede a los servicios:
+
+* Aplicación: [http://localhost/](http://localhost/)
+* Métricas: [http://localhost/metrics](http://localhost/metrics)
+* Prometheus: [http://localhost:9090](http://localhost:9090)
+* Grafana: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## Despliegue en Azure
+
+Si deseas desplegar CloudOps Orchestrator en Azure mediante Terraform:
+
+➡ Sigue la guía completa en [docs/azure-deployment.md](./docs/README-AZURE.md)
+
+La guía explica:
+
+* Cómo se despliega la máquina virtual y la red
+* Cómo *cloud-init* (`user_data.sh`) instala y configura el stack
+* Configuración automática de Prometheus y Grafana
+* Rutas útiles y dashboards preconfigurados
+
+---
+
+## CI/CD 
+
+El repositorio incluye un flujo de GitHub Actions capaz de:
+
+* Validar Terraform
+* Conectarse por SSH a la VM en Azure
+* Actualizar y desplegar nuevamente los servicios Docker
+
+➡ Sigue la guía completa en [docs/cicd.md](./docs/cicd.md)
+
+---
+
+## Autor
 **Aldara Castro Mosquera**  
 *Cloud & DevOps Enthusiast*  
 Galicia, España  
 
 ---
 
-### ⚠️ Licencia
+## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
+══════════════════════════════════════════════════════════════════════════
 
+🇬🇧 English
 
-════════════════════════════════════════════════════
+CloudOps Orchestrator is a fully automated deployment and monitoring solution built with **Flask**, **Docker Compose**, **PostgreSQL**, **Nginx**, **Prometheus**, and **Grafana**. It includes optional infrastructure automation using **Terraform** and **Azure**, as well as CI/CD integration with **GitHub Actions**.
 
-
-
-## 🇬🇧 English
-
-### Overview
-**CloudOps Orchestrator** is a modular tool that allows you to **automatically deploy Docker applications** across multiple environments (local, Azure, AWS, and GCP).  
-It integrates **Terraform** for Infrastructure as Code (IaC), **Docker Compose** for local setups, and **GitHub Actions** for CI/CD.  
-Includes **Prometheus and Grafana** for basic monitoring and metrics exposure, following DevOps best practices.
+This README provides a high‑level overview of the project. 
 
 ---
 
-### Project structure
+## Features
+
+* Containerized backend with **Flask**
+* Reverse proxy using **Nginx**
+* Persistent storage using **PostgreSQL**
+* Metrics exported via **Prometheus** format
+* Dashboards provided by **Grafana**
+* System- and container-level metrics via **Node Exporter** and **cAdvisor**
+* Optional **Azure deployment** automated with **Terraform**
+* Optional **GitHub Actions CI/CD** deployment pipeline
+
+---
+
+## Project Structure
+
 ```
 cloudops-orchestrator/
-├─ app/ # Flask application source code
-│ ├─ main.py # Endpoints + Prometheus metrics
-│ ├─ Dockerfile # App image
-│ └─ requirements.txt # Python dependencies
+├── app/
+│   ├── main.py                     # Flask application
+│   ├── Dockerfile                  # Backend Docker image
+│   ├── requirements.txt            # Python dependencies
+│   └── .env.example                # Environment variables template
 │
-├─ nginx/ # Nginx reverse proxy configuration
-│ └─ default.conf
+├── nginx/
+│   ├── default.conf                # Reverse proxy configuration for Flask
 │
-├─ terraform/ # Infrastructure as Code (IaC)
-│ ├─ azure/
-│ ├─ aws/
-│ └─ gcp/
+├── prometheus/
+│   ├── prometheus.yml              # Scraping configuration
 │
-├─ docs/ # Cloud provider documentation
-│ ├─ README-azure.md
-│ ├─ README-aws.md
-│ └─ README-gcp.md
+├── grafana/
+│   └── provisioning/
+│       ├── datasources/
+│       │   └── prometheus.yml      # Prometheus datasource definition
+│       └── dashboards/
+│           ├── dashboards.yml      # Dashboard provisioning config
+│           └── cloudops-dashboard.json   # Main Grafana dashboard
 │
-├─ .github/workflows/ # CI/CD pipeline (automatic validation)
-│ └─ deploy.yml
+├── terraform/
+│   └── azure/
+│       ├── main.tf                 # Azure resources (VM, VNet, NSG…)
+│       ├── variables.tf            # Terraform variables
+│       ├── outputs.tf              # Public IP, VM name…
+│       ├── user_data.sh            # Cloud-init script (Docker + app setup)
 │
-├─ docker-compose.yml # Local stack: app + db + nginx
-├─ Makefile # Quick development commands
-└─ README.md # This document
+├── docs/
+│   ├── azure-deployment.md         # Full Azure deployment guide
+│   ├── architecture.md             # Platform architecture
+│   ├── monitoring.md               # Monitoring (Prometheus/Grafana)
+│   └── cicd.md                     # GitHub Actions CI/CD pipeline
+│
+├── .github/
+│   └── workflows/
+│       ├── deploy.yml              # Automatic deployment to Azure via SSH
+│
+├── docker-compose.yml              # Full stack orchestration
+├── README.md                       # Main README (English)
+├── LICENSE                         # MIT License
+├── Makefile                        # Useful commands (optional)
+├── .gitignore                      # Git ignore rules
+└── .dockerignore                   # Ignore rules for Docker builds
+
 ```
+
+For in‑depth documentation for terraform module, refer to the corresponding files inside [docs/](./docs).
 
 ---
 
-### Local execution
+## Documentation
 
-#### Prerequisites
-- Docker + Docker Compose  
-- Python 3.10+ (only if running without containers)  
-- Terraform (for cloud deployment)
+To avoid duplication and improve navigation, all extended guides have been moved to:
 
-#### Quick steps
+➡ [docs/README-AZURE.md](./docs/README-azure.md) — Terraform, VM provisioning, cloud-init, monitoring stack, PromQL, and routes
 
-##### 1. Clone the repository
-```
-git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
-cd cloudops-orchestrator
-```
+➡ [docs/architecture.md](./docs/arquitecture.md) — System components, Docker services, metrics pipeline, diagrams
 
-##### 2. Start the services
-```
-make up
-```
+➡ [docs/monitoring.md](./docs/monitoring.md) — Prometheus, Grafana dashboards, exporters, test traffic
 
-##### 3. View logs
-```
-make logs
-```
+➡ [docs/cicd.md](./docs/cicd.md) — GitHub Actions deployment pipeline
 
-The application will be available at http://localhost:8000
-
-Available endpoints:
-
-- / → Main message  
-- /health → Service status  
-- /metrics → Prometheus metrics
+Each document focuses on a single topic and includes examples, screenshots, diagrams, and usage instructions.
 
 ---
 
-### Project philosophy
-> “Automate everything you can, but understand what you automate.”
+## Running Locally
 
-This project aims to combine **learning and real-world DevOps practice**, covering:
+You can run the entire stack locally using Docker Compose:
 
-- Reproducible infrastructure with Terraform  
-- Modular deployment per cloud provider  
-- Portable containers with Docker  
-- CI/CD automation with GitHub Actions  
-- Monitoring and metrics with Prometheus + Grafana
+```bash
+docker compose up -d --build
+```
 
----
+Access the services:
 
-### Roadmap
-
-|  Phase |  Description |  Status |
-|:--------:|:---------------|:-----------|
-| 1️ | **Local Core** — Docker Compose + Flask + Nginx + Postgres | Completed |
-| 2️ | **Cloud Infrastructure** — Terraform (Azure) | Completed |
-| 3️ | **CI/CD** — Validation and automatic deployment | Completed |
-| 4️ | **Monitoring** — Prometheus + Grafana | Completed |
-| 5️ | **Multi-Cloud** — Full deployment across all clouds | Coming soon |
+* App: [http://localhost/](http://localhost/)
+* Metrics: [http://localhost/metrics](http://localhost/metrics)
+* Prometheus: [http://localhost:9090](http://localhost:9090)
+* Grafana: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-### Technologies used
+## Azure Deployment
 
-- Python 3.12  
-- Flask  
-- Prometheus Client  
-- Docker / Docker Compose  
-- Terraform  
-- Nginx  
-- GitHub Actions  
+If you want to deploy CloudOps Orchestrator in Microsoft Azure using Terraform:
+
+➡ Follow the full guide in [docs/README-AZURE.md](./docs/README-AZURE.md)
+
+The guide explains:
+
+* How to deploy the VM and networking
+* How cloud-init (`user_data.sh`) installs and provisions the stack
+* Prometheus/Grafana automatic setup
+* Useful URLs & dashboards
 
 ---
 
-### Author
+## CI/CD Deployment
+
+The repository includes a GitHub Actions workflow that can:
+
+* Validate Terraform
+* SSH into the Azure VM
+* Pull and redeploy updated Docker services
+
+➡ Follow the full guide in **`docs/cicd.md`**(./docs/cicd.md)
+
+---
+
+## Author
 **Aldara Castro Mosquera**  
 *Cloud & DevOps Enthusiast*  
 Galicia, Spain  
 
 ---
 
-### ⚠️ License
+## ⚠️ License
 See the [LICENSE](./LICENSE) file for more details.
