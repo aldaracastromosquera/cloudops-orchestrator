@@ -14,8 +14,6 @@ Este documento explica cómo desplegar **CloudOps Orchestrator en Azure** usando
 - **Node Exporter & cAdvisor** → Métricas de host y contenedores  
 - **GitHub Actions** → CI/CD opcional para actualización remota  
 
----
-
 ### Resultado final
 
 La máquina virtual creada por Terraform se vuelve **autosuficiente** y, al arrancar:
@@ -47,18 +45,18 @@ terraform/
 
 ## Requisitos previos
 
-### 1. **Cuenta de Azure** activa  
-### 2. **Azure CLI** instalada y autenticada:
+- **Cuenta de Azure** activa  
+- **Azure CLI** instalada y autenticada:
 ```
 winget install -e --id Microsoft.AzureCLI
 az version
 ```
-### 3. **Terraform instalado** (v1.5+ recomendado):
+- **Terraform instalado** (v1.5+ recomendado):
 ```
 winget install -e --id HashiCorp.Terraform
 terraform -version
 ```
-### 4. **Git instalado** (para clonar repositorio):
+- **Git instalado** (para clonar repositorio):
 ```
 winget install -e --id Git.Git
 git --version
@@ -120,7 +118,7 @@ Deberías ver el mensaje:
 
 >Hola desde CloudOps Orchestrator!
 
-#### Servicios desplegados automáticamente
+#### 7.1. Servicios desplegados automáticamente
 
 | Servicio       | Puerto              | Descripción                                      |
 |----------------|---------------------|--------------------------------------------------|
@@ -133,7 +131,7 @@ Deberías ver el mensaje:
 | **Node Exporter** | **9100**         | Métricas del host (CPU, RAM, disco…)             |
 
 
-#### Rutas útiles del despliegue
+#### 7.2. Rutas útiles del despliegue
 
 Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puedes acceder a:
 
@@ -149,8 +147,8 @@ Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puede
 | **cAdvisor** | `http://<IP_PUBLICA>:8081` | Métricas de contenedores Docker |
 | **Node Exporter** | `http://<IP_PUBLICA>:9100/metrics` | Métricas del host (CPU, RAM, disco…) |
 
-##### * Puedes generar tráfico de prueba para comprobar que Prometheus recoge las métricas correctamente y que Grafana muestra datos en los dashboards, puedes generar tráfico simulado hacia la API.
-###### Ejecuta desde Powershell 
+##### 7.2.1. Puedes generar tráfico de prueba 
+Para comprobar que Prometheus recoge las métricas correctamente y que Grafana muestra datos en los dashboards, puedes generar tráfico simulado hacia la API. Ejecuta desde Powershell: 
 ```
 # 300 peticiones a /
 1..300 | % { iwr http://<IP_PUBLICA>/ | Out-Null }
@@ -159,7 +157,7 @@ Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puede
 1..100 | % { iwr http://<IP_PUBLICA>/health | Out-Null }
 ```
 
-##### Consultas PromQL recomendadas
+##### 7.3. Consultas PromQL recomendadas
 
 | Métrica | Query | Explicación |
 |---------|--------|-------------|
@@ -223,8 +221,6 @@ This guide explains how to deploy **CloudOps Orchestrator on Azure** using the f
 - **Node Exporter & cAdvisor** → Host and container metrics  
 - **GitHub Actions** → Optional CI/CD for remote updates  
 
----
-
 ### Final Result
 
 The virtual machine created by Terraform becomes **fully self-managing**, and on first boot it:
@@ -252,23 +248,21 @@ terraform/
 
 ---
 
-
-
 ##  Prerequisites
 
-### 1. Active Azure account
+- Active Azure account
 
-### 2. Azure CLI installed and logged in
+- Azure CLI installed and logged in
 ```
 winget install -e --id Microsoft.AzureCLI
 az version
 ```
-### 3. Terraform installed (v1.5+ recommended)
+- Terraform installed (v1.5+ recommended)
 ```
 winget install -e --id HashiCorp.Terraform
 terraform -version
 ```
-### 4. Git installed
+- Git installed
 ```
 winget install -e --id Git.Git
 git version
@@ -320,7 +314,7 @@ You should see:
 
 >Hola desde CloudOps Orchestrator!
 
-#### Services Deployed Automatically
+#### 7.1. Services Deployed Automatically
 
 | Service         | Port               | Description                                      |
 |-----------------|--------------------|--------------------------------------------------|
@@ -334,7 +328,7 @@ You should see:
 
 ---
 
-#### Useful URLs After Deployment
+#### 7.2. Useful URLs After Deployment
 
 Once the VM is ready, you can access the following endpoints:
 
@@ -350,8 +344,8 @@ Once the VM is ready, you can access the following endpoints:
 | **cAdvisor**             | `http://<PUBLIC_IP>:8081`    | Container metrics |
 | **Node Exporter**        | `http://<PUBLIC_IP>:9100/metrics` | Host metrics |
 
-##### * Generating Test Traffic to visualize metrics in Prometheus and Grafana, generate simulated traffic.
-###### From Powershell
+##### 7.2.1. Generating Test Traffic 
+To visualize metrics in Prometheus and Grafana, generate simulated traffic. From Powershell:
 ```
 # 300 requests to /
 1..300 | % { iwr http://<PUBLIC_IP>/ | Out-Null }
@@ -360,7 +354,7 @@ Once the VM is ready, you can access the following endpoints:
 1..100 | % { iwr http://<PUBLIC_IP>/health | Out-Null }
 ```
 
-#### Recommended PromQL Queries
+#### 7.3. Recommended PromQL Queries
 
 | Metric               | Query                                   | Explanation                    |
 |----------------------|-------------------------------------------|--------------------------------|
@@ -369,8 +363,6 @@ Once the VM is ready, you can access the following endpoints:
 | Requests per second  | `rate(app_requests_total[5m])`           | 5-minute moving average        |
 | Flask CPU usage      | `rate(process_cpu_seconds_total[5m])`    | Backend CPU usage              |
 | Flask RAM (MB)       | `process_resident_memory_bytes / 1024 / 1024` | Convert bytes to MB      |
-
-
 
 ### 8. Cleanup
 Destroy the resources when done:
