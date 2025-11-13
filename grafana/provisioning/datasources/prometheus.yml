@@ -7,6 +7,7 @@ apiVersion: 1   # Versión del esquema de provisioning de Grafana
 
 datasources:
   - name: Prometheus              # Nombre que aparecerá en Grafana para este datasource
+    uid: prometheus               # UID fijo y legible para referenciar este datasource
     type: prometheus              # Tipo de datasource (Prometheus)
     access: proxy                 # Grafana actúa como proxy para las consultas
     url: http://prometheus:9090   # Dirección del contenedor Prometheus en la red de Docker

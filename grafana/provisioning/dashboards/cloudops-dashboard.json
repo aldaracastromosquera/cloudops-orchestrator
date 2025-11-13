@@ -18,7 +18,7 @@
     {
     "type": "timeseries",
     "title": "Requests per second (by endpoint)",
-    "datasource": {"type":"prometheus","uid":"${DS_PROMETHEUS}"},
+    "datasource": { "type": "prometheus", "uid": "prometheus" },
     "targets": [
         {"expr": "rate(app_requests_total[5m])", "legendFormat": "{{endpoint}}"}
     ],
@@ -27,7 +27,7 @@
     {
     "type": "stat",
     "title": "Total requests /",
-    "datasource": {"type":"prometheus","uid":"${DS_PROMETHEUS}"},
+    "datasource": { "type": "prometheus", "uid": "prometheus" },
     "targets": [
         {"expr": "app_requests_total{endpoint=\"/\"}"}
     ],
@@ -36,7 +36,7 @@
     {
     "type": "stat",
     "title": "Total requests /health",
-    "datasource": {"type":"prometheus","uid":"${DS_PROMETHEUS}"},
+    "datasource": { "type": "prometheus", "uid": "prometheus" },
     "targets": [
         {"expr": "app_requests_total{endpoint=\"/health\"}"}
     ],
