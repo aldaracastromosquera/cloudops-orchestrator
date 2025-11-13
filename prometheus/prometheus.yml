@@ -10,7 +10,6 @@ global:
 
 # -------------------------------------------------------------------
 # Definición de trabajos (scrape jobs)
-# Aquí se especifican las "fuentes" de métricas
 # -------------------------------------------------------------------
 scrape_configs:
 
