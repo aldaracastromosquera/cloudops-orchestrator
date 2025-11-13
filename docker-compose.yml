@@ -58,6 +58,10 @@ services:
       - "80:80"                                                   # Expone el puerto 80
     networks: [app_net]                      # Usa la misma red para comunicarse con la app
 
+
+  # ----------------------------------------------------------
+  # Prometheus + Grafana + Exporters
+  # ----------------------------------------------------------
   prometheus:
     image: prom/prometheus:v2.54.1
     container_name: cloudops-prometheus
@@ -85,7 +89,7 @@ services:
     container_name: cloudops-grafana
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}        # Usuario admin
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}# Contraseña
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin} # Contraseña
       GF_USERS_ALLOW_SIGN_UP: "false"                             # Desactiva creación de cuentas
     ports:
       - "3000:3000"                                               # Expone la UI de Grafana
