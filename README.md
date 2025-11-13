@@ -2,13 +2,8 @@
 
 ## 🇪🇸 Español
 
-# 🇪🇸 Versión en Español
-
-# CloudOps Orchestrator
-
 CloudOps Orchestrator es una solución completa de despliegue y monitorización construida con **Flask**, **Docker Compose**, **PostgreSQL**, **Nginx**, **Prometheus** y **Grafana**. Incluye además automatización opcional de infraestructura mediante **Terraform** y **Azure**, así como un flujo CI/CD mediante **GitHub Actions**.
 
-Este README ofrece una visión general del proyecto.
 ---
 
 ## Características
@@ -148,11 +143,9 @@ Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
 ══════════════════════════════════════════════════════════════════════════
 
-🇬🇧 English
+## 🇬🇧 English
 
 CloudOps Orchestrator is a fully automated deployment and monitoring solution built with **Flask**, **Docker Compose**, **PostgreSQL**, **Nginx**, **Prometheus**, and **Grafana**. It includes optional infrastructure automation using **Terraform** and **Azure**, as well as CI/CD integration with **GitHub Actions**.
-
-This README provides a high‑level overview of the project. 
 
 ---
 
