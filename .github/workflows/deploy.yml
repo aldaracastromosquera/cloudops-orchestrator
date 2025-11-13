@@ -113,7 +113,7 @@ jobs:
       # - Requiere configurar los secretos en GitHub:
       #     AZURE_VM_IP       → IP pública de la VM
       #     AZURE_VM_USER     → Usuario SSH (por ejemplo: azureuser)
-      #     AZURE_SSH_KEY     → Clave privada (contenido del id_rsa)
+      #     AZURE_SSH_KEY     → Clave privada
       # --------------------------------------------------------
       - name: Connect to Azure VM and deploy
         uses: appleboy/ssh-action@v1.2.0

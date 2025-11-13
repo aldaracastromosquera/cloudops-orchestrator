@@ -119,11 +119,7 @@ Galicia, España
 
 ---
 
-### Licencia
-Este proyecto se distribuye bajo la licencia **MIT**, lo que significa que puedes:  
-- Usarlo libremente para fines **educativos o profesionales**.  
-- **Modificarlo, compartirlo y adaptarlo**, siempre citando su origen.  
-
+### ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
 
@@ -251,9 +247,5 @@ Galicia, Spain
 
 ---
 
-### License
-This project is distributed under the **MIT license**, which means you can:  
-- Use it freely for **educational or professional purposes**.  
-- **Modify, share, and adapt** it, always giving credit to the original source.  
-
+### ⚠️ License
 See the [LICENSE](./LICENSE) file for more details.
