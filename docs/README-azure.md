@@ -123,8 +123,8 @@ Deberías ver el mensaje:
 | Servicio       | Puerto              | Descripción                                      |
 |----------------|---------------------|--------------------------------------------------|
 | **Nginx**      | **80**              | Reverse proxy hacia Flask                        |
-| **Flask API**  | **8000**   | App                  |
-| **PostgreSQL** | **5432**   | Base de datos                                    |
+| **Flask API**  | **8000** (interno)  | Backend de CloudOps                              |
+| **PostgreSQL** | **5432** (interno)  | Base de datos                                    |
 | **Prometheus** | **9090**            | Métricas de aplicación + nodo + contenedores     |
 | **Grafana**    | **3000**            | Dashboards preconfigurados                       |
 | **cAdvisor**   | **8081**            | Métricas detalladas de contenedores              |
@@ -319,8 +319,8 @@ You should see:
 | Service         | Port               | Description                                      |
 |-----------------|--------------------|--------------------------------------------------|
 | **Nginx**       | **80**             | Reverse proxy to Flask                           |
-| **Flask API**   | **8000** | App       |
-| **PostgreSQL**  | **5432** | Database                                         |
+| **Flask API**   | **8000** (internal)| CloudOps backend                                 |
+| **PostgreSQL**  | **5432** (internal)| Database                                         |
 | **Prometheus**  | **9090**           | App, node, and container metrics                 |
 | **Grafana**     | **3000**           | Preconfigured dashboards                         |
 | **cAdvisor**    | **8081**           | Container metrics                                |
