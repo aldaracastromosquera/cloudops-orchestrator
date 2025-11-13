@@ -225,9 +225,9 @@ This project aims to combine **learning and real-world DevOps practice**, coveri
 |  Phase |  Description |  Status |
 |:--------:|:---------------|:-----------|
 | 1️ | **Local Core** — Docker Compose + Flask + Nginx + Postgres | Completed |
-| 2️ | **Cloud Infrastructure** — Terraform (Azure / AWS / GCP) | In progress (Azure implemented) |
+| 2️ | **Cloud Infrastructure** — Terraform (Azure) | Completed |
 | 3️ | **CI/CD** — Validation and automatic deployment | Completed |
-| 4️ | **Monitoring** — Prometheus + Grafana | Coming soon |
+| 4️ | **Monitoring** — Prometheus + Grafana | Completed |
 | 5️ | **Multi-Cloud** — Full deployment across all clouds | Coming soon |
 
 ---
