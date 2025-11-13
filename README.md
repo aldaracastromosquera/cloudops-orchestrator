@@ -87,50 +87,6 @@ Toda la documentación extendida se encuentra en:
 
 ---
 
-## Ejecutar Localmente
-
-Puedes ejecutar todo el stack usando Docker Compose:
-
-```bash
-docker compose up -d --build
-```
-
-Accede a los servicios:
-
-* Aplicación: [http://localhost/](http://localhost/)
-* Métricas: [http://localhost/metrics](http://localhost/metrics)
-* Prometheus: [http://localhost:9090](http://localhost:9090)
-* Grafana: [http://localhost:3000](http://localhost:3000)
-
----
-
-## Despliegue en Azure
-
-Si deseas desplegar CloudOps Orchestrator en Azure mediante Terraform:
-
-➡ Sigue la guía completa en [docs/azure-deployment.md](./docs/README-AZURE.md)
-
-La guía explica:
-
-* Cómo se despliega la máquina virtual y la red
-* Cómo *cloud-init* (`user_data.sh`) instala y configura el stack
-* Configuración automática de Prometheus y Grafana
-* Rutas útiles y dashboards preconfigurados
-
----
-
-## CI/CD 
-
-El repositorio incluye un flujo de GitHub Actions capaz de:
-
-* Validar Terraform
-* Conectarse por SSH a la VM en Azure
-* Actualizar y desplegar nuevamente los servicios Docker
-
-➡ Sigue la guía completa en [docs/cicd.md](./docs/cicd.md)
-
----
-
 ## Autor
 **Aldara Castro Mosquera**  
 *Cloud & DevOps Enthusiast*  
@@ -229,50 +185,6 @@ To avoid duplication and improve navigation, all extended guides have been moved
 ➡ [docs/cicd.md](./docs/cicd.md) — GitHub Actions deployment pipeline
 
 Each document focuses on a single topic and includes examples, screenshots, diagrams, and usage instructions.
-
----
-
-## Running Locally
-
-You can run the entire stack locally using Docker Compose:
-
-```bash
-docker compose up -d --build
-```
-
-Access the services:
-
-* App: [http://localhost/](http://localhost/)
-* Metrics: [http://localhost/metrics](http://localhost/metrics)
-* Prometheus: [http://localhost:9090](http://localhost:9090)
-* Grafana: [http://localhost:3000](http://localhost:3000)
-
----
-
-## Azure Deployment
-
-If you want to deploy CloudOps Orchestrator in Microsoft Azure using Terraform:
-
-➡ Follow the full guide in [docs/README-AZURE.md](./docs/README-AZURE.md)
-
-The guide explains:
-
-* How to deploy the VM and networking
-* How cloud-init (`user_data.sh`) installs and provisions the stack
-* Prometheus/Grafana automatic setup
-* Useful URLs & dashboards
-
----
-
-## CI/CD Deployment
-
-The repository includes a GitHub Actions workflow that can:
-
-* Validate Terraform
-* SSH into the Azure VM
-* Pull and redeploy updated Docker services
-
-➡ Follow the full guide in **`docs/cicd.md`**(./docs/cicd.md)
 
 ---
 
