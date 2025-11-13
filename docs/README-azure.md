@@ -4,7 +4,7 @@
 
 ## 🇪🇸 Español
 
-### Descripción general
+## Descripción general
 Este documento explica cómo desplegar **CloudOps Orchestrator en Azure** usando:
 
 - **Terraform** → Infraestructura reproducible  
@@ -16,7 +16,7 @@ Este documento explica cómo desplegar **CloudOps Orchestrator en Azure** usando
 
 ---
 
-## Resultado final
+### Resultado final
 
 La máquina virtual creada por Terraform se vuelve **autosuficiente** y, al arrancar:
 
@@ -32,7 +32,7 @@ El entorno queda totalmente automatizado, reproducible y listo para producción.
 
 ---
 
-### Estructura de archivos Terraform
+## Estructura de archivos Terraform
 
 ```
 terraform/
@@ -45,20 +45,20 @@ terraform/
 
 ---
 
-### Requisitos previos
+## Requisitos previos
 
-#### 1. **Cuenta de Azure** activa  
-#### 2. **Azure CLI** instalada y autenticada:
+### 1. **Cuenta de Azure** activa  
+### 2. **Azure CLI** instalada y autenticada:
 ```
 winget install -e --id Microsoft.AzureCLI
 az version
 ```
-#### 3. **Terraform instalado** (v1.5+ recomendado):
+### 3. **Terraform instalado** (v1.5+ recomendado):
 ```
 winget install -e --id HashiCorp.Terraform
 terraform -version
 ```
-#### 4. **Git instalado** (para clonar repositorio):
+### 4. **Git instalado** (para clonar repositorio):
 ```
 winget install -e --id Git.Git
 git --version
@@ -66,14 +66,14 @@ git --version
 
 ---
 
-### Despliegue paso a paso
-#### 1. Clonar el repositorio
+## Despliegue paso a paso
+### 1. Clonar el repositorio
 ```
 cd $HOME\Desktop
 git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
 cd .\cloudops-orchestrator\terraform\azure
 ```
-#### 2. Iniciar sesión en Azure:
+### 2. Iniciar sesión en Azure:
 ```
 cd $HOME\Desktop
 git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
@@ -85,28 +85,28 @@ az login
 az account list --output table
 az account set --subscription "<NOMBRE O ID>"
 ```
-#### 3. Inicializar Terraform
+### 3. Inicializar Terraform
 ```
 terraform init
 ```
-#### 2. Revisar y ajustar variables
+### 4. Revisar y ajustar variables
 Edita variables.tf o crea un archivo terraform.tfvars personalizado:
 ```
 resource_group_name = "cloudops-rg"
 location            = "westeurope"
 vm_size             = "Standard_B1s"
 ```
-#### 3. Previsualizar cambios
+### 5. Previsualizar cambios
 ```
 terraform plan
 ```
-#### 4. Aplicar el despliegue
+### 6. Aplicar el despliegue
 ```
 terraform apply -auto-approve
 ```
 Espera unos minutos mientras Azure crea la red, VM y ejecuta el script de instalación.
 
-#### 5. Ver resultados
+### 7. Ver resultados
 Al finalizar, Terraform mostrará:
 ```
 Outputs:
@@ -120,9 +120,7 @@ Deberías ver el mensaje:
 
 >Hola desde CloudOps Orchestrator!
 
----
-
-## Servicios desplegados automáticamente
+#### Servicios desplegados automáticamente
 
 | Servicio       | Puerto              | Descripción                                      |
 |----------------|---------------------|--------------------------------------------------|
@@ -134,9 +132,8 @@ Deberías ver el mensaje:
 | **cAdvisor**   | **8081**            | Métricas detalladas de contenedores              |
 | **Node Exporter** | **9100**         | Métricas del host (CPU, RAM, disco…)             |
 
----
 
-## 🌐 Rutas útiles del despliegue
+#### Rutas útiles del despliegue
 
 Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puedes acceder a:
 
@@ -152,8 +149,8 @@ Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puede
 | **cAdvisor** | `http://<IP_PUBLICA>:8081` | Métricas de contenedores Docker |
 | **Node Exporter** | `http://<IP_PUBLICA>:9100/metrics` | Métricas del host (CPU, RAM, disco…) |
 
-### * Puedes generar tráfico de prueba para comprobar que Prometheus recoge las métricas correctamente y que Grafana muestra datos en los dashboards, puedes generar tráfico simulado hacia la API.
-#### Ejecuta desde Powershell 
+##### * Puedes generar tráfico de prueba para comprobar que Prometheus recoge las métricas correctamente y que Grafana muestra datos en los dashboards, puedes generar tráfico simulado hacia la API.
+###### Ejecuta desde Powershell 
 ```
 # 300 peticiones a /
 1..300 | % { iwr http://<IP_PUBLICA>/ | Out-Null }
@@ -162,9 +159,7 @@ Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puede
 1..100 | % { iwr http://<IP_PUBLICA>/health | Out-Null }
 ```
 
----
-
-### 🎯 Consultas PromQL recomendadas
+##### Consultas PromQL recomendadas
 
 | Métrica | Query | Explicación |
 |---------|--------|-------------|
@@ -174,13 +169,9 @@ Una vez creada la VM y obtenida la IP pública (`http://xxx.xxx.xxx.xxx`), puede
 | CPU proceso Flask | `rate(process_cpu_seconds_total[5m])` | Uso de CPU del backend |
 | RAM proceso Flask (MB) | `process_resident_memory_bytes / 1024 / 1024` | Conversión de bytes a MB |
 
----
 
-Si quieres también te preparo una **tabla con las credenciales por defecto**, otra con **los contenedores Docker** o una sección de **troubleshooting** para Azure.
 
----
-
-### Limpieza del entorno
+### 8. Limpieza del entorno
 Cuando termines las pruebas, destruye todos los recursos:
 ```
 terraform destroy -auto-approve
@@ -189,7 +180,7 @@ Así evitarás costos innecesarios en tu cuenta de Azure.
 
 ---
 
-### Conceptos clave
+## Conceptos clave
 | Recurso | Descripción |
 |:-----------------------------|:-----------------------------------------------|
 | `azurerm_resource_group` | Agrupa todos los recursos desplegados |
@@ -201,7 +192,7 @@ Así evitarás costos innecesarios en tu cuenta de Azure.
 
 ---
 
-### Filosofía del despliegue
+## Filosofía del despliegue
 >“Infraestructura reproducible, sin clics y sin miedo.”
 
 Este módulo Azure demuestra cómo pasar de una app local a un entorno cloud completamente automatizado.
@@ -209,65 +200,15 @@ Cada despliegue es idéntico, seguro y versionable, gracias a Terraform.
 
 ---
 
-### Outputs típicos
-Tras un despliegue exitoso, verás:
-```
-Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-public_ip = "52.174.100.42"
-vm_name   = "cloudops-vm"
-```
-Y podrás acceder directamente desde tu navegador o hacer ping con:
-```
-curl http://$(terraform output -raw public_ip)
-```
-
----
-
-### Detalle del user_data.sh
-Este script se ejecuta automáticamente al iniciar la VM y prepara todo el entorno:
-```
-#!/bin/bash
-apt update -y
-apt install -y docker.io docker-compose-plugin git
-git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git /opt/cloudops
-cd /opt/cloudops
-docker compose up -d
-```
-Resultado: el sistema se autoconfigura y lanza la app Flask con Nginx y Postgres en segundos.
-
----
-
-### Integración con GitHub Actions (opcional)
-Puedes ampliar el flujo CI/CD para que GitHub valide la infraestructura:
-```
-- name: Terraform validate (Azure)
-  working-directory: terraform/azure
-  run: |
-    terraform init -backend=false
-    terraform validate
-```
-Esto asegura que cada commit mantenga la infraestructura lista para desplegar.
-
----
-
-### Autor
+## Autor
 **Aldara Castro Mosquera**  
 *Cloud & DevOps Enthusiast*  
 Galicia, España  
 
 ---
 
-### Licencia
-Este proyecto se distribuye bajo la licencia **MIT**, lo que significa que puedes:  
-- Usarlo libremente para fines **educativos o profesionales**.  
-- **Modificarlo, compartirlo y adaptarlo**, siempre citando su origen.  
-
+## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
-
-
 
 ════════════════════════════════════════════════════
 
@@ -284,7 +225,7 @@ This guide explains how to deploy **CloudOps Orchestrator on Azure** using the f
 
 ---
 
-## Final Result
+### Final Result
 
 The virtual machine created by Terraform becomes **fully self-managing**, and on first boot it:
 
@@ -299,19 +240,35 @@ The environment is fully automated, reproducible, and production-ready.
 
 ---
 
-## Prerequisites
-### 1. Active **Azure account**
-### 2. **Azure CLI** installed and logged in:
+## Terraform Project Structure
+```
+terraform/
+└─ azure/
+├─ main.tf # Main Azure resources
+├─ variables.tf # Reusable variables
+├─ outputs.tf # Useful outputs (public IP, VM name…)
+└─ user_data.sh # Initialization script (Docker + app deployment)
+```
+
+---
+
+
+
+##  Prerequisites
+
+### 1. Active Azure account
+
+### 2. Azure CLI installed and logged in
 ```
 winget install -e --id Microsoft.AzureCLI
 az version
 ```
-### 3. **Terraform installed** (v1.5+ recommended):
+### 3. Terraform installed (v1.5+ recommended)
 ```
 winget install -e --id HashiCorp.Terraform
 terraform -version
 ```
-### 4. **Git installed**:
+### 4. Git installed
 ```
 winget install -e --id Git.Git
 git version
@@ -319,25 +276,103 @@ git version
 
 ---
 
-### Deployment steps
+## Deployment steps
+### 1. Clone the repository
 ```
 cd $HOME\Desktop
 git clone https://github.com/aldaracastromosquera/cloudops-orchestrator.git
 cd .\cloudops-orchestrator\terraform\azure
+```
+### 2. Choose your Azure Subscription
+```
 az login
+az account list --output table
+az account set --subscription "<NAME_OR_ID>"
+```
+### 3. Initialize Terraform
+```
 terraform init
+```
+### 4. Adjust variables
+```
+resource_group_name = "cloudops-rg"
+location            = "westeurope"
+vm_size             = "Standard_B2s"
+```
+### 5. Preview changes
+```
+terraform plan
+```
+### 6. Deploy infraestructure
+```
 terraform apply -auto-approve
-
 ```
 After a few minutes, Terraform will show the public IP of the VM.
+### 7. Results
 ```
-public_ip = "52.174.xxx.xxx"
+Outputs:
+
+public_ip = "xxx.xxx.xxx.xxx"
 ```
-Open it in your browser to verify that the application is running.
+After a few minutes. open in your browser to verify that the application is running → http://xxx.xxx.xxx.xxx
+
+You should see:
+
+>Hola desde CloudOps Orchestrator!
+
+#### Services Deployed Automatically
+
+| Service         | Port               | Description                                      |
+|-----------------|--------------------|--------------------------------------------------|
+| **Nginx**       | **80**             | Reverse proxy to Flask                           |
+| **Flask API**   | **8000** (internal)| CloudOps backend                                 |
+| **PostgreSQL**  | **5432** (internal)| Database                                         |
+| **Prometheus**  | **9090**           | App, node, and container metrics                 |
+| **Grafana**     | **3000**           | Preconfigured dashboards                         |
+| **cAdvisor**    | **8081**           | Container metrics                                |
+| **Node Exporter** | **9100**         | Host metrics (CPU, RAM, disk…)                   |
 
 ---
 
-### Cleanup
+#### Useful URLs After Deployment
+
+Once the VM is ready, you can access the following endpoints:
+
+| Feature / Route          | URL example                  | Description |
+|--------------------------|------------------------------|-------------|
+| **Main page**            | `http://<PUBLIC_IP>/`        | CloudOps Orchestrator response |
+| **Health check**         | `http://<PUBLIC_IP>/health`  | API status |
+| **App metrics (Flask)**  | `http://<PUBLIC_IP>/metrics` | Prometheus exporter |
+| **Prometheus UI**        | `http://<PUBLIC_IP>:9090`    | PromQL queries |
+| **Prometheus Targets**   | `http://<PUBLIC_IP>:9090/targets` | Scraped services |
+| **Prometheus Graph**     | `http://<PUBLIC_IP>:9090/graph`   | Execute queries |
+| **Grafana Dashboard**    | `http://<PUBLIC_IP>:3000`    | Dashboards (user: `admin` / pass: `admin`)* |
+| **cAdvisor**             | `http://<PUBLIC_IP>:8081`    | Container metrics |
+| **Node Exporter**        | `http://<PUBLIC_IP>:9100/metrics` | Host metrics |
+
+##### * Generating Test Traffic to visualize metrics in Prometheus and Grafana, generate simulated traffic.
+###### From Powershell
+```
+# 300 requests to /
+1..300 | % { iwr http://<PUBLIC_IP>/ | Out-Null }
+
+# 100 requests to /health
+1..100 | % { iwr http://<PUBLIC_IP>/health | Out-Null }
+```
+
+#### Recommended PromQL Queries
+
+| Metric               | Query                                   | Explanation                    |
+|----------------------|-------------------------------------------|--------------------------------|
+| Total by endpoint    | `app_requests_total`                     | Absolute request count         |
+| Only `/`             | `app_requests_total{endpoint="/"}`       | Total hits to the root path    |
+| Requests per second  | `rate(app_requests_total[5m])`           | 5-minute moving average        |
+| Flask CPU usage      | `rate(process_cpu_seconds_total[5m])`    | Backend CPU usage              |
+| Flask RAM (MB)       | `process_resident_memory_bytes / 1024 / 1024` | Convert bytes to MB      |
+
+
+
+### 8. Cleanup
 Destroy the resources when done:
 ```
 terraform destroy -auto-approve
@@ -345,7 +380,20 @@ terraform destroy -auto-approve
 
 ---
 
-### Philosophy
+## Key Concepts
+
+| Resource                      | Description                               |
+|-------------------------------|-------------------------------------------|
+| `azurerm_resource_group`      | Groups all Azure resources                |
+| `azurerm_virtual_network`     | Private virtual network                   |
+| `azurerm_subnet`              | Subnet inside the VNet                    |
+| `azurerm_network_interface`   | Network interface for the VM              |
+| `azurerm_public_ip`           | Public IP assigned to the VM              |
+| `azurerm_linux_virtual_machine` | VM running Docker and the application   |
+
+---
+
+## Philosophy
 >“Reproducible infrastructure, without clicks and without fear.”
 
 This Azure module shows how to go from a local app to a fully automated cloud environment.
@@ -353,16 +401,12 @@ Every deployment is consistent, safe, and version-controlled, thanks to Terrafor
 
 ---
 
-### Author
+## Author
 **Aldara Castro Mosquera**  
 *Cloud & DevOps Enthusiast*  
 Galicia, Spain  
 
 ---
 
-### License
-This project is distributed under the **MIT license**, which means you can:  
-- Use it freely for **educational or professional purposes**.  
-- **Modify, share, and adapt** it, always giving credit to the original source.  
-
+## ⚠️ License
 See the [LICENSE](./LICENSE) file for more details.
