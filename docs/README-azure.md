@@ -2,7 +2,7 @@
 
 > **Automatización del despliegue en Microsoft Azure usando Terraform y Docker**
 
-## 🇪🇸 Español
+# 🇪🇸 Español
 
 ## Descripción general
 Este documento explica cómo desplegar **CloudOps Orchestrator en Azure** usando:
@@ -208,9 +208,9 @@ Galicia, España
 ## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
+---
 
-
-## 🇬🇧 English
+# 🇬🇧 English
 ## Overview  
 This guide explains how to deploy **CloudOps Orchestrator on Azure** using the following technologies:
 
@@ -400,4 +400,5 @@ Galicia, Spain
 ---
 
 ## ⚠️ License
+
 See the [LICENSE](./LICENSE) file for more details.
