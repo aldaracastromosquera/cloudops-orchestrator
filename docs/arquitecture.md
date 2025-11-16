@@ -1,5 +1,5 @@
-# CloudOps Orchestrator — Architecture (English & Spanish)
-# 🇪🇸 Resumen de Arquitectura
+
+## 🇪🇸 Resumen de Arquitectura
 
 CloudOps Orchestrator utiliza una **arquitectura modular basada en contenedores**, diseñada para ser totalmente reproducible, escalable y automatizable. Esta sección describe cada componente y cómo interactúan entre sí.
 
@@ -156,9 +156,9 @@ Galicia, España
 ## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
-══════════════════════════════════════════════════════════════════════════
 
-# 🇬🇧 Architecture Overview
+
+## 🇬🇧 Architecture Overview
 
 CloudOps Orchestrator follows a **modular, container-based architecture** designed for clarity, security, and full automation. The system integrates application logic, reverse proxying, persistent storage, monitoring, and infrastructure provisioning.
 
