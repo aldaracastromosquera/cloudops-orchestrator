@@ -7,7 +7,7 @@ CloudOps Orchestrator utiliza una **arquitectura modular basada en contenedores*
 
 ## Componentes Principales
 
-### 1. **Backend Flask (app/)**
+### 1. Backend Flask (app/)
 
 * Expone endpoints:
 
@@ -17,13 +17,13 @@ CloudOps Orchestrator utiliza una **arquitectura modular basada en contenedores*
 * Construido en una imagen ligera de Python
 * Se comunica internamente con PostgreSQL
 
-### 2. **Proxy Inverso Nginx (nginx/)**
+### 2. Proxy Inverso Nginx (nginx/)
 
 * Recibe el tráfico HTTP en el puerto **80**
 * Redirige peticiones al backend en **8000**
 * Agrega seguridad y desacopla los servicios
 
-### 3. **Base de Datos PostgreSQL**
+### 3. Base de Datos PostgreSQL
 
 * Guarda la información persistente de la aplicación
 * Usa volúmenes Docker para almacenamiento seguro
@@ -33,7 +33,7 @@ CloudOps Orchestrator utiliza una **arquitectura modular basada en contenedores*
 
 ## Stack de Monitorización
 
-### 4. **Prometheus**
+### 4. Prometheus
 
 * Recolecta métricas desde:
 
@@ -41,12 +41,12 @@ CloudOps Orchestrator utiliza una **arquitectura modular basada en contenedores*
   * Node Exporter
   * cAdvisor
 
-### 5. **Grafana**
+### 5. Grafana
 
 * Paneles y datasources preconfigurados
 * Interfaz para analizar el estado de la plataforma
 
-### 6. **Node Exporter**
+### 6. Node Exporter
 
 * Proporciona métricas del host:
 
@@ -55,7 +55,7 @@ CloudOps Orchestrator utiliza una **arquitectura modular basada en contenedores*
   * Disco
   * Carga del sistema
 
-### 7. **cAdvisor**
+### 7. cAdvisor
 
 * Métricas por contenedor:
 
@@ -81,7 +81,7 @@ Servicios:
 
 ---
 
-## Infraestructura Azure (Terraform)
+## Infraestructura Azure 
 
 Terraform despliega:
 
@@ -168,7 +168,7 @@ This document provides a complete overview of how the platform is structured and
 
 ## Core Components
 
-### 1. **Flask Backend (app/)**
+### 1. Flask Backend (app/)
 
 * Exposes HTTP endpoints:
 
@@ -178,13 +178,13 @@ This document provides a complete overview of how the platform is structured and
 * Built into a lightweight Python Docker image
 * Connects internally to PostgreSQL
 
-### 2. **Nginx Reverse Proxy (nginx/)**
+### 2. Nginx Reverse Proxy (nginx/)
 
 * Accepts all incoming traffic on port **80**
 * Forwards requests to the Flask container (port **8000**)
 * Ensures security and performance isolation
 
-### 3. **PostgreSQL Database**
+### 3. PostgreSQL Database
 
 * Stores application data
 * Persisted using Docker volumes
@@ -194,7 +194,7 @@ This document provides a complete overview of how the platform is structured and
 
 ## Monitoring Stack
 
-### 4. **Prometheus**
+### 4. Prometheus
 
 * Scrapes metrics from:
 
@@ -203,13 +203,13 @@ This document provides a complete overview of how the platform is structured and
   * cAdvisor
 * Stores time-series metrics (retention configurable)
 
-### 5. **Grafana**
+### 5. Grafana
 
 * Automatically provisioned datasource (Prometheus)
 * Automatically provisioned dashboards
 * UI for visualizing performance and system health
 
-### 6. **Node Exporter**
+### 6. Node Exporter
 
 * Provides metrics for the host system:
 
@@ -218,7 +218,7 @@ This document provides a complete overview of how the platform is structured and
   * Disk usage
   * System load
 
-### 7. **cAdvisor**
+### 7. cAdvisor
 
 * Provides container-level metrics:
 
@@ -250,7 +250,7 @@ Services include:
 
 ---
 
-## Azure Infrastructure (Terraform)
+## Azure Infrastructure 
 
 When deployed in Azure:
 
