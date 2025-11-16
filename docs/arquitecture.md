@@ -282,7 +282,7 @@ GitHub Actions connects to the VM via SSH and performs:
 
 ---
 
-## Architecture Diagram (ASCII)
+## Architecture Diagram
 
 ```
             ┌────────────────────┐
