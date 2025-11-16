@@ -93,7 +93,7 @@ Galicia, España
 ## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
-
+---
 
 ## 🇬🇧 English
 
@@ -186,4 +186,5 @@ Galicia, Spain
 ---
 
 ## ⚠️ License
+
 See the [LICENSE](./LICENSE) file for more details.
