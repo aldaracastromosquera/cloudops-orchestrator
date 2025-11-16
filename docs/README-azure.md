@@ -208,9 +208,9 @@ Galicia, España
 ## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
-══════════════════════════════════════════════════════════════════════════
 
-🇬🇧 English
+
+## 🇬🇧 English
 ## Overview  
 This guide explains how to deploy **CloudOps Orchestrator on Azure** using the following technologies:
 
