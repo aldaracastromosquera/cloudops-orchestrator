@@ -61,9 +61,9 @@ cloudops-orchestrator/
 │       ├── deploy.yml              # Despliegue automático a Azure por 
 │
 ├── docker-compose.yml              # Orquestación completa del stack
-├── README.md                       # README principal (inglés)
-├── LICENSE                         # MIT License
-├── Makefile                        # Comandos útiles (opcional)
+├── README.md                       # README principal
+├── LICENSE                         # License
+├── Makefile                        # Comandos
 ├── .gitignore                      # Ignorar archivos
 └── .dockerignore                   # Ignorar archivos en builds Docker
 
@@ -93,7 +93,7 @@ Galicia, España
 ## ⚠️ Licencia
 Consulta el archivo [LICENSE](./LICENSE) para más detalles.
 
-════════════════════════════════════════════════════════════════════════
+
 
 ## 🇬🇧 English
 
@@ -156,9 +156,9 @@ cloudops-orchestrator/
 │       ├── deploy.yml              # Automatic deployment to Azure via SSH
 │
 ├── docker-compose.yml              # Full stack orchestration
-├── README.md                       # Main README (English)
-├── LICENSE                         # MIT License
-├── Makefile                        # Useful commands (optional)
+├── README.md                       # README
+├── LICENSE                         # License
+├── Makefile                        # Commands
 ├── .gitignore                      # Git ignore rules
 └── .dockerignore                   # Ignore rules for Docker builds
 
