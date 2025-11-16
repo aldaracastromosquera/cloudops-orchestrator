@@ -4,6 +4,7 @@
 
 # 🇪🇸 Español
 
+
 ## Descripción general
 Este documento explica cómo desplegar **CloudOps Orchestrator en Azure** usando:
 
@@ -402,3 +403,4 @@ Galicia, Spain
 ## ⚠️ License
 
 See the [LICENSE](./LICENSE) file for more details.
+
